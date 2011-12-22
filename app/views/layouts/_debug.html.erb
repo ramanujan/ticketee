@@ -1,0 +1,11 @@
+<ul>
+    <h3 class="alt">Debug info</h3>		
+	<% if Rails.env.development? %>
+	    <% params.each do |k,v| %>
+	       <li><%=k%> : <%=v%></li>
+	       
+	    <%end%>
+	<%end%> 
+</ul>
+<hr />
+<%=params.inspect%>

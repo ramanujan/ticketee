@@ -1,0 +1,17 @@
+<%=form_for @project do |f| %>
+      
+       <div id="form_for_project">
+      
+               <div class="label_cell">
+                    <%=f.label :name,'Project Name'%>
+	           </div>
+	  
+	           <div class="input_cell">
+	  	            <%=f.text_field :name%>
+               </div> 
+           
+               <div>
+                 <%=f.submit :class=>"formButton"%>
+               </div> 
+        </div> 
+<%end%>
