@@ -7,3 +7,26 @@
 //= require jquery
 //= require jquery_ujs
 //= require_tree .
+
+$(document).ready(function() {
+  $("div.notLongForThisWorld").hide().addClass("removed");
+  $("div.removed").show(); 
+  $("div.removed")[0].innerHTML="I have added some text";
+  $("div.removed").html("I have added some text to a group node");
+ 
+ /* Un piccolo assaggio dei selettori presenti:
+ 
+  $("p:even") Selects all even <p> elements
+  
+  $("tr:nth-child(1)") Selects the first row of each table
+  
+  $("body > div") Selects direct <div> children of <body>
+  
+  $("a[href$= 'pdf ']") Selects links to PDF files
+  
+  $("body > div:has(a)") Selects direct <div> children of <body>-containing links
+
+ */
+ 
+ 
+ });

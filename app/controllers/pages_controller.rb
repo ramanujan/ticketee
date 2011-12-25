@@ -8,5 +8,12 @@ class PagesController < ApplicationController
  end
 
 
+ def demo_jquery
+      
+        
+    
+ end
+
+
 
 end

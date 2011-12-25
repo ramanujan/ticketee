@@ -1,16 +1,50 @@
 <div class="block">
 	
-	<div id="main" class="column span-16">
+	<div id="project_showing" class="rounded column span-16">
     
-         <div>
+         <div id="project_name">
          	  <h2 class="alt"><%=@project.name%></h2>
          </div>
-    
+         
+         <div class="project_commands">
+           
+             <div id="project_update">
+                 <%=link_to "Edit Project",edit_project_path(@project),:class=>"command_button"%>
+             </div>	
+             
+             <div id="project_add_ticket">
+                   <%=link_to "Add Ticket",edit_project_path(@project),:class=>"command_button"%>  
+             </div>	
+           
+             <div id="project_delete">
+                  <%=link_to "Delete Project",edit_project_path(@project),:class=>"command_button"%>
+             </div>            
+         </div>
+         <hr class="space"/>
+         
+         <hr />
+         
+         <div id="project_info">
+             
+                 <div>
+                 	 
+                 	 Inserted about : <%=distance_of_time_in_words_to_now(@project.created_at,true)%> ago  
+                 
+                 </div>           
+                  	
+                  <div>
+                 	 
+                 	 Latest update about : <%=distance_of_time_in_words_to_now(@project.updated_at,true)%> ago  
+                 
+                 </div>             
+         
+         </div>
+         
+         
+         
+         
+          
     </div>	
-	
-	<div class="debug column span-4 box">
-         <%=render "layouts/debug"%>  
-    </div> 
 
 	
 </div>

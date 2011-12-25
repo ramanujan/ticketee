@@ -1,7 +1,16 @@
+=begin
+      
+       
+=end
+
+
 Ticketee::Application.routes.draw do
   
   root :to => 'projects#index'
   resources :projects
+
+  match "pages/jquery" => "pages#demo_jquery"
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

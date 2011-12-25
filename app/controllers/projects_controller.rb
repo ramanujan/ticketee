@@ -2,7 +2,8 @@ class ProjectsController < ApplicationController
 
  def index
       
-         
+      @projects = Project.all
+      @title="home - "   
    
  end
 
@@ -106,7 +107,41 @@ end
 def show
 
   @project = Project.find(params[:id])
+  @title="#{@project.name} - Projects - "
+end
 
+
+def edit 
+   
+   @project = Project.find(params[:id])
+     
+end
+
+
+
+=begin
+      Vale la pena di spendere due parole per il metodo update_attributes(). Questo metodo se si verifica 
+      un problema dovuto alla connessione lancia
+      una bella eccezione. Altrimenti ritorna false, se le modifiche portano ad un oggetto non valido, 
+      oppure ritorna true se le modifiche sono ok,
+      non violano cioè le validazioni. Infatti questo metodo invoca save().  
+       
+=end  
+  
+
+
+def update
+
+     @project = Project.find(params[:id])
+     
+    if @project.update_attributes(params[:project])
+        flash[:notice]="Project has been updated."
+        redirect_to @project
+    else
+        flash[:error]="Project has not been updated."
+        render 'edit'
+    end
+     
 end
 
 

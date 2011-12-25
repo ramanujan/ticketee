@@ -1,4 +1,4 @@
-Given /^(?:|I )am on (.+)$/ do |page_name|
+Given /^I am on the (.+)$/ do |page_name|
   
   visit path_to(page_name) #path_to è definito in features/support/paths.rb nel modulo NavigationHelpers
   
@@ -13,11 +13,36 @@ When /^I fill in "([^"]*)" with "([^"]*)"$/ do |arg1, arg2|
 end
 
 When /^I press "([^"]*)"$/ do |arg1|
+
   click_button(arg1) # finds a button by id,text,value and clicks it
+
+end
+
+Then /^I should be on the (project show page for "[^"]*")$/ do |page_name|
+    
+    current_path.should == path_to(page_name) 
+
 end
 
 Then /^I should see "([^"]*)"$/ do |arg1|
 
-  page.has_content? arg1
+  page.should have_content arg1
 
 end
+
+# viewing_projects.feature
+
+=begin
+        Perchè utilizzare Factory e non Project.create(:name=>name)? Se aggiungessimo un'altro campo alla tabella 
+        projects, e se aggiungessimo una validazione sul campo, come ad esempio la presenza, allora dovremmo 
+        cambiare tutte le occorrenze di Project.create perchè contengano il nuovo campo. Quando utilizziamo Factory
+        eseguiamo questo cambiamento in un unico posto e cioè dove la factory è definita.  
+=end
+
+Given /^There is a project called "([^"]*)"$/ do |name|
+
+  Factory(:project, :name=>name)
+
+end
+
+

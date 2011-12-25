@@ -12,7 +12,23 @@
  	
  	</div>
 
-
-
+    <%unless @projects.empty?%>
+          
+            <div id="projects_listing" class="box rounded column span-16">
+                   <h2 class="alt">Your projects (<%=@projects.size%>)</h2>
+                   <%@projects.each do |project| %>
+                        
+                        <div class="project_entry_image">
+                     	     <%=linked_image_tag(:image_name=>"fiocco.jpg",:linked_to=>project)%> 
+                         </div>                 
+                         
+                         <div class="project_entry_name">
+                     	     <%=link_to project.name, project%> 
+                         </div>     
+                         <%=linked_image_tag(:image_name=>"right_arrow_small.png",:linked_to=>project)%>            
+                         <hr />  
+                   <%end%>
+             </div> 
+    <%end%> 
 
 </div>
