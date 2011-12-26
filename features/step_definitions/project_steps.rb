@@ -45,4 +45,6 @@ Given /^There is a project called "([^"]*)"$/ do |name|
 
 end
 
-
+Then /^I should not see "([^"]*)"$/ do |arg1|
+  page.should have_no_content arg1
+end

@@ -77,7 +77,7 @@
     width: 550px; 
    -moz-border-radius: 15px;
    border-radius: 5px;
-    
+  
 } 
 
 .input_cell input:focus {
@@ -145,6 +145,7 @@
 }
 
 .box{
+
 	overflow:auto;
 }
 
@@ -192,12 +193,23 @@
 }
 
 #project_showing div, #project_showing div h2{
+	
 	display:inline;
     margin-right:1.2em; 
 }
 
+#project_name {
+	overflow: auto;
+  
+}
+
+
 #project_delete a:hover{
 	color:red;
+}
+
+#project_commands{
+	border:solid;
 }
 
 #project_info div{
@@ -256,7 +268,9 @@
 .command_button:active {
   
    }
-   
+ .command_button:visited{
+
+ }  
 
 /* Updating styling */
 

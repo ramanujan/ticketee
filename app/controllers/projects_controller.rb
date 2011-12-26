@@ -145,4 +145,15 @@ def update
 end
 
 
+
+
+def destroy
+     
+     @project = Project.delete(params[:id])
+     flash[:notice]="Project has been deleted."
+     redirect_to root_path 
+      
+end
+
+
 end

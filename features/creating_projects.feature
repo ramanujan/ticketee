@@ -9,7 +9,7 @@ Feature: Creating projects
 Background:
  Given I am on the homepage
  When I follow "New Project"
-  
+
 Scenario: Creating a project
  And I fill in "Name" with "TextMate 2"
  And I press "Create Project"
@@ -21,5 +21,6 @@ Scenario: Creating a project without name
  And I press "Create Project" 
  Then I should see "Project has not been created."
  And I should see "Name can't be blank"
+
 
 Scenario: Creating a project with a duplicate name
