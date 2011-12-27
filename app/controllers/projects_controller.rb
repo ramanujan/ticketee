@@ -1,4 +1,19 @@
 class ProjectsController < ApplicationController
+ 
+ before_filter :find_project, :only=>[:show,:edit,:update] #Potresti utilizzare anche :except
+ 
+ def find_project
+          
+        @project = Project.find(params[:id])
+        
+        rescue ActiveRecord::RecordNotFound
+        
+         flash[:alert] = "The project you were looking for could not be found." 
+         redirect_to projects_path 
+ end
+ 
+ private :find_project
+ 
 
  def index
       
@@ -105,16 +120,13 @@ end
 
 
 def show
-
-  @project = Project.find(params[:id])
-  @title="#{@project.name} - Projects - "
+    @title="#{@project.name} - Projects - "
 end
 
 
 def edit 
-   
-   @project = Project.find(params[:id])
-     
+      
+     @title="Edit - Projects - "
 end
 
 
@@ -125,22 +137,33 @@ end
       una bella eccezione. Altrimenti ritorna false, se le modifiche portano ad un oggetto non valido, 
       oppure ritorna true se le modifiche sono ok,
       non violano cioè le validazioni. Infatti questo metodo invoca save().  
-       
+
+      Dato questo duplice comportamento in caso do errore ho deciso di catturare l'eccezione e di rimandare
+      alla home page con flash[:error]           
 =end  
   
 
 
 def update
 
-     @project = Project.find(params[:id])
-     
+    
+begin     
+    
     if @project.update_attributes(params[:project])
         flash[:notice]="Project has been updated."
         redirect_to @project
     else
         flash[:error]="Project has not been updated."
+        @title="Errors - Projects"
         render 'edit'
     end
+
+rescue
+       flash[:error]="Project has not been updated (exceptionally update error)."
+      
+       redirect_to root_path
+end 
+ 
      
 end
 
