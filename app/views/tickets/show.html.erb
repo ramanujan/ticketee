@@ -1,0 +1,38 @@
+<div class="block">
+	 
+	 <div id="ticket_showing" class="rounded column span-23">
+	   <div>   
+	   	    <div id="ticket_title">
+                 <h2 class="alt"><%=@ticket.title%></h2>
+            </div>
+                
+            <div id="ticket_edit">
+                 <%=link_to "Edit Ticket",
+                             edit_project_ticket_path(@project,@ticket),
+                             :class=>"command_button"%>
+            </div>	
+                 
+            <div id="ticket_delete">
+                 
+                 <%=link_to "Delete Ticket",
+                             project_tickets_path(@project,@ticket),
+                             :method=>"delete",
+                             :confirm=>"Are you sure to delete ticket '#{@ticket.title}' associatedo to project '#{@project.name}' ?",
+                             :class=>"command_button"%>
+            </div>	 
+                  
+       </div>
+       
+       <hr class="space"/>
+       <hr />
+       
+       <div id="ticket_info">
+           
+            <%=simple_format(@ticket.description)%>
+       
+       
+       </div>
+       
+     </div>       
+
+</div>

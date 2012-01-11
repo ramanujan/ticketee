@@ -27,4 +27,13 @@ Ticketee::Application.configure do
 
   # Expands the lines which load the assets
   config.assets.debug = true
+
+  #switch ActiveMerchant to test mode. 
+   
+  config.after_initialize do
+    ActiveMerchant::Billing::Base.mode = :test
+   end
+
+
+
 end

@@ -23,7 +23,7 @@ gem 'jquery-rails'
 #Domenico D'Egidio
 gem 'execjs'
 gem 'therubyracer', :platforms=>:ruby
-
+gem 'activemerchant', '~> 1.10.0'
 
 
 

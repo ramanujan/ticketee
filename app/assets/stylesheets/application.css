@@ -81,9 +81,27 @@
   
 } 
 
+
 .input_cell input:focus {
    border-color: #0099FF;
 }
+
+
+.input_cell textarea {
+	
+	height:6em;
+    width: 540px; 
+   -moz-border-radius: 15px;
+   border-radius: 5px;
+  
+} 
+
+.input_cell textarea:focus {
+   border-color: #0099FF;
+}
+
+
+
 
 /* form button */ 
 
@@ -237,7 +255,7 @@
      background: -moz-linear-gradient(top, #ebebeb, #a1a1a1); /* firefox 3.6+*/
      background: -ms-linear-gradient(top, #ebebeb, #a1a1a1); /* IE 10 */
      background: -o-linear-gradient(top, #ebebeb, #a1a1a1); /* Opera 11.10 */
-     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ebebeb', endColorstr='#a1a1a1'); /* IE6 & IE7 */  
+   /*filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ebebeb', endColorstr='#a1a1a1');*/ /* IE6 & IE7 */  
      -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#ebebeb', endColorstr='#a1a1a1')"; /* IE8+ */  
      background: linear-gradient('#ebebeb', '#a1a1a1'); /* the standard */  
      background: #d1d1d1; /* for non-css3 browsers */   
@@ -296,4 +314,46 @@
 #edit > div{
 	margin:1.1em;
 }
+
+/* Ticket styling */ 
+
+#ticket_showing{
+	
+	background-color: #ededf2;	
+    border: solid 1px #dddddd;
+    border-bottom: solid 2px #dddddd;
+    padding: 1.5em;
+      
+}
+
+
+
+#ticket_showing div, #ticket_showing div h2{
+	
+	display:inline;
+    margin-right:1.2em; 
+}
+
+#ticket_title {
+	overflow: scroll;
+  
+}
+
+
+#ticket_delete a:hover{
+	color:red;
+}
+
+
+
+#ticket_info {
+	
+	display:block;
+    font-size: 1.3em;
+    color:#444;
+    overflow: auto; 
+}
+
+
+
 

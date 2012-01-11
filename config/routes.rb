@@ -3,11 +3,21 @@
        
 =end
 
-
 Ticketee::Application.routes.draw do
   
+  get "payments/index"
+
+  get "payments/confirm"
+
+  get "payments/complete"
+
+  get "payments/checkout"
+  
   root :to => 'projects#index'
-  resources :projects
+ 
+  resources :projects do
+    resources :tickets
+    end
 
   match "pages/jquery" => "pages#demo_jquery"
 

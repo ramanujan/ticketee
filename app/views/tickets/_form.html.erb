@@ -1,0 +1,27 @@
+<%=form_for [@project,@ticket] do |f| %>
+       <%=f.error_messages%>
+       <div id="form_for_ticket">
+      
+               <div class="label_cell">
+                    <%=f.label :title,'Ticket title'%>
+	           </div>
+	  
+	           <div class="input_cell">
+	  	            <%=f.text_field :title%>
+               </div> 
+           
+                <div class="label_cell">
+                    <%=f.label :description%>
+	           </div>
+	  
+	           <div class="input_cell">
+	  	            <%=f.text_area :description%>
+               </div> 
+           
+           
+           
+               <div>
+                 <%=f.submit :class=>"formButton"%>
+               </div> 
+        </div> 
+<%end%>
