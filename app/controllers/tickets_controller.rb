@@ -17,8 +17,8 @@
 class TicketsController < ApplicationController
     
     
-    before_filter :find_project, :only=>[:new,:create,:show,:edit,:update]
-    before_filter :find_ticket, :only=>[:show,:edit,:update]
+    before_filter :find_project, :only=>[:new,:create,:show,:edit,:update,:destroy]
+    before_filter :find_ticket, :only=>[:show,:edit,:update,:destroy]
     
     
     def find_project  
@@ -99,5 +99,12 @@ class TicketsController < ApplicationController
                redirect_to [@project,@ticket]
           end 
      end
+
+     def destroy
+          @ticket.delete
+          flash[:notice]="Ticket has been deleted."
+          redirect_to @project 
+     end
+
 
 end

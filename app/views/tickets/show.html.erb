@@ -15,7 +15,7 @@
             <div id="ticket_delete">
                  
                  <%=link_to "Delete Ticket",
-                             project_tickets_path(@project,@ticket),
+                             project_ticket_path(@project,@ticket),
                              :method=>"delete",
                              :confirm=>"Are you sure to delete ticket '#{@ticket.title}' associatedo to project '#{@project.name}' ?",
                              :class=>"command_button"%>
