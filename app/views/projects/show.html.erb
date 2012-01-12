@@ -3,7 +3,7 @@
 	    <div id="project_showing" class="rounded column span-23">
 	   
 	        <div>   
-	             <div id="#project_name">
+	             <div id="project_name_show">
                      <h2 class="alt"><%=@project.name%></h2>
                  </div>
                 
@@ -25,8 +25,38 @@
                   
             </div>
        
-       </div>       
-                  
+       </div> 
+       
+       <hr class="space"/>
+       
+        <%unless @project.tickets.empty?%>
+          
+            <div id="project_tickets_list" class="box rounded column span-16">
+                   
+                   <h2 class="alt">Associated tickets (<%=@project.tickets.size%>)</h2>
+                   
+                   <%@project.tickets.each do |ticket| %>
+                        
+                        <div class="project_ticket_entry_image">
+                     	     <%=linked_image_tag(:image_name=>"fiocco.jpg",
+                     	                         :linked_to=>[@project,ticket])%> 
+                         </div>                 
+                         
+                         <div class="project_ticket_entry_name">
+                     	     <%=link_to ticket.title, [@project,ticket]%> 
+                         </div>     
+                     
+                         <%=linked_image_tag(:image_name=>"right_arrow_small.png",
+                                             :linked_to=>[@project,ticket])%>            
+                     
+                         <hr />  
+                   <%end%>
+             </div> 
+        <%end%> 
+     
+     
+     
+     
 
 </div>
 

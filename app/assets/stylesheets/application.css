@@ -73,7 +73,7 @@
 }
 
 .input_cell input {
-	
+	font-size:1.5em;
 	height:2em;
     width: 550px; 
    -moz-border-radius: 15px;
@@ -88,7 +88,7 @@
 
 
 .input_cell textarea {
-	
+	font-size:1.8em;
 	height:6em;
     width: 540px; 
    -moz-border-radius: 15px;
@@ -217,9 +217,9 @@
     margin-right:1.2em; 
 }
 
-#project_name {
-	overflow: auto;
-  
+#project_name_show { /* Attenzione non lo chiamare project_name collide con form */
+ 	overflow: auto;
+    font-size: 0.8em;
 }
 
 
@@ -326,17 +326,16 @@
       
 }
 
-
-
 #ticket_showing div, #ticket_showing div h2{
 	
 	display:inline;
     margin-right:1.2em; 
 }
 
-#ticket_title {
+#ticket_title_show { /* Attenzione non chiamarlo ticket_title collide con form */
+	
 	overflow: scroll;
-  
+    font-size: 0.8em;  
 }
 
 
@@ -344,16 +343,35 @@
 	color:red;
 }
 
+#ticket_info{
+	font-size: 1.1em;
+}
 
-
-#ticket_info {
-	
-	display:block;
-    font-size: 1.3em;
-    color:#444;
-    overflow: auto; 
+#ticket_info a{
+	text-decoration:none;
+	font-size:1.2em;
 }
 
 
+#ticket_description_show {
+	
+	overflow:auto;
+    font-size:1.4em; 
+}
 
+
+.project_ticket_entry_image{
+	
+	display:inline;
+}
+
+.project_ticket_entry_name{
+   display:inline;	
+}
+
+.project_ticket_entry_name a{
+	
+	text-decoration:none;
+	font-size:1.5em;
+}
 

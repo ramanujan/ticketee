@@ -15,7 +15,7 @@ Scenario: Creating a project
  And I press "Create Project"
  Then I should be on the project show page for "TextMate 2"
  And I should see "Project has been created."
- And I should see "TextMate 2 - Projects - Ticketee"
+ And I should see "Showing project: TextMate 2 - Ticketee"
 
 Scenario: Creating a project without name
  And I press "Create Project" 
@@ -24,3 +24,8 @@ Scenario: Creating a project without name
 
 
 Scenario: Creating a project with a duplicate name
+ Given There is a project called "TextMate 2"
+ And I fill in "Name" with "TextMate 2"
+ And I press "Create Project"
+ Then I should see "Project has not been created."
+ And I should see "Name has already been taken"

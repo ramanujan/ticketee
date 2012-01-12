@@ -18,7 +18,7 @@ class ProjectsController < ApplicationController
  def index
       
       @projects = Project.all
-      @title="home - "   
+      @title="Home - "   
    
  end
 
@@ -71,7 +71,7 @@ class ProjectsController < ApplicationController
  def new
       
       @project = Project.new 
-      @title="New - Projects - "
+      @title="Create a new project - "
  end 
 
 
@@ -112,6 +112,7 @@ def create
     
     else
        flash[:error]="Project has not been created. " 
+       @title="Project creation errors - "
        render 'new' # È come render "new.html.erb" oppure render "projects/new.html.erb"
     end
     
@@ -120,13 +121,15 @@ end
 
 
 def show
-    @title="#{@project.name} - Projects - "
+    
+    @title="Showing project: #{@project.name} - "
+     
 end
 
 
 def edit 
       
-     @title="Edit - Projects - "
+     @title="Editing project: #{@project.name} - "
 end
 
 
@@ -154,7 +157,7 @@ begin
         redirect_to @project
     else
         flash[:error]="Project has not been updated."
-        @title="Errors - Projects"
+        @title="Project update errors - "
         render 'edit'
     end
 
@@ -172,8 +175,10 @@ end
 
 def destroy
      
-     @project = Project.delete(params[:id])
+     @project = Project.destroy(params[:id])
+     
      flash[:notice]="Project has been deleted."
+     
      redirect_to root_path 
       
 end

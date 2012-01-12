@@ -2,7 +2,7 @@
 	 
 	 <div id="ticket_showing" class="rounded column span-23">
 	   <div>   
-	   	    <div id="ticket_title">
+	   	    <div id="ticket_title_show">
                  <h2 class="alt"><%=@ticket.title%></h2>
             </div>
                 
@@ -20,19 +20,31 @@
                              :confirm=>"Are you sure to delete ticket '#{@ticket.title}' associatedo to project '#{@project.name}' ?",
                              :class=>"command_button"%>
             </div>	 
-                  
-       </div>
+        </div>          
+       
        
        <hr class="space"/>
        <hr />
        
-       <div id="ticket_info">
+       <div id="ticket_description_show" class="column span-24">
            
-            <%=simple_format(@ticket.description)%>
+          <%=simple_format(@ticket.description)%>
        
        
        </div>
+     
+       <hr class="space"/>
+       <hr />
        
-     </div>       
+       <div id="ticket_info" class="column span-24">
+           
+          This ticket was added to <%=link_to "[ #{@project.name} ]", @project%> 
+           <%=distance_of_time_in_words_to_now @ticket.created_at,true%> ago
+       
+       
+       </div>
+     
+   
+   </div>       
 
 </div>

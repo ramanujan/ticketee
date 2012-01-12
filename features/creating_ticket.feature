@@ -23,7 +23,7 @@ Scenario: Creating a ticket without an empty attribute
    And I should see "Description can't be blank"
    
 Scenario: Creating a ticket  with a long title 
-    When I fill in "Ticket title" with "*******************************"
+    When I fill in "Ticket title" with "*************************************"
     And I press "Create Ticket"
     Then I should see "Ticket has not been created."
     And I should see "is too long (maximum is 30 characters)"

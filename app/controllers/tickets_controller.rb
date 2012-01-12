@@ -17,7 +17,8 @@
 class TicketsController < ApplicationController
     
     
-    before_filter :find_project, :only=>[:new,:create,:show]
+    before_filter :find_project, :only=>[:new,:create,:show,:edit,:update]
+    before_filter :find_ticket, :only=>[:show,:edit,:update]
     
     
     def find_project  
@@ -29,15 +30,25 @@ class TicketsController < ApplicationController
         flash[:alert] = "The project you were looking for could not be found." 
         redirect_to projects_path 
     end
+     
+    
+    
+    def find_ticket
+       
+     @ticket = @project.tickets.find(params[:id])
+     rescue ActiveRecord::RecordNotFound
+        flash[:alert] = "The ticket you were looking for could not be found." 
+        redirect_to project_path(@project) 
+    end 
    
     
-    private :find_project
+    private :find_project, :find_ticket
    
   
   
      def new 
         
-        @title= "New - Tickets - #{@project.name}"
+        @title= "New tickets for #{@project.name} - "
         @ticket = @project.tickets.build
          
      end
@@ -56,6 +67,7 @@ class TicketsController < ApplicationController
            else
                
                 flash[:error]="Ticket has not been created."
+                @title="Ticket creation errors - "
                 render :new # è come render 'new' ovvero render 'new.html.erb' 
            end        
         
@@ -63,14 +75,29 @@ class TicketsController < ApplicationController
 
 
      def show
-       
-       @ticket = @project.tickets.find(params[:id])
-       
-       rescue ActiveRecord::RecordNotFound
-        flash[:alert] = "The ticket you were looking for could not be found." 
-        redirect_to project_path(@project) 
-     
+       @title = "Showing ticket: #{@ticket.title} - "
      end 
 
+     
+     def edit
+         @title="Editing ticket: #{@ticket.title} - "       
+     end   
+
+     def update
+          begin     
+              if @ticket.update_attributes(params[:ticket])
+                 flash[:notice]="Ticket has been updated."
+                 redirect_to [@project,@ticket]
+              else
+                 flash[:error]="Ticket has not been updated."
+                 @title="Ticket update errors - "
+                 render 'edit'
+              end
+
+          rescue
+               flash[:error]="Ticket has not been updated (exceptionally update error)."
+               redirect_to [@project,@ticket]
+          end 
+     end
 
 end
