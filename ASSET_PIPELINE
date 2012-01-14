@@ -1,0 +1,6 @@
+Il componente Asset Pipeline, fornisce a Rails la capacità di concatenare e
+miniaturizzare o comprimere gli asset Javascript e CSS. Inoltre aggiunge la
+capacità di costruire questi asset in CoffeScript Sass e ERB. 
+
+Il comportamento di default di Rails 3.1 è quello di concatenare tutti i file in un unico
+master file (uno per CSS e uno per JS). In produzione un MD5 fingerprint 

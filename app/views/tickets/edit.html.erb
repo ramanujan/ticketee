@@ -1,9 +1,13 @@
 <div class="block">
 
-  <div id="main" class="column span-16">
+  <div class="column span-16 colborder">
         <div>
-     	     <h2 class="alt"> Edit ticket associated to <%= @project.name %> </h2> 
-             <%= render "form" %>
+     	     <h2 class="alt form_title">Editing ticket associated to project: <%=@project.name%></h2> 
+             
+             <div id="form">
+             	<%= render "form" %>
+             </div> 
+        
         </div>
      
   </div> 

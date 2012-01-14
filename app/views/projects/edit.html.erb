@@ -1,15 +1,18 @@
 <div class="block">
 
-  <div id="title_edit" class="column span-16 last">
-     <h2 class="alt">Project Settings</h2> 
-  </div>	
-  
-  <div id="edit" class="column span-16 last">
+  <div class="column span-16 colborder">
         <div>
-     	    <%= render "form" %>
+     	     <h2 class="alt form_title">Edit project: <%=@project.name%></h2> 
+             
+             <div id="form">
+             	<%= render "form" %>
+             </div> 
+        
         </div>
      
   </div> 
 
-  
+  <div class="debug column span-4 box">
+         <%=render "layouts/debug"%>  
+  </div> 
 </div>

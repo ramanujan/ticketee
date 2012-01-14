@@ -1,4 +1,4 @@
-<div class="block">
+<div id="header" class="block">
 		<div class="column span-24">
 			<div>
 				<h1> 
@@ -8,9 +8,13 @@
 				</h1>
 				
 		        <hr class="space">
-				<hr>
-				<h2 class="alt">This application show what you get with RoR</h2>
-				<hr>
+				<hr />
+				
+				 <h2 class="alt" id="header_info">This application show what you get with RoR</h2>
+				 <%if user_signed_in? %>
+				    <span class="user_log_info"> Signed in as <%=current_user.email%></span>
+				 <%end%> 
+				<hr />
 			</div>
 		</div>
 </div>

@@ -10,87 +10,84 @@
 
 
 
-/* Create Project button */
 
-.create_project_button {
-   border-top: 1px solid #96d1f8;
-   background: #65a9d7;
-   
-   background: -webkit-gradient(linear, left top, left bottom, from(#3e779d), to(#65a9d7));
-   background: -webkit-linear-gradient(top, #3e779d, #65a9d7);
-   background: -moz-linear-gradient(top, #3e779d, #65a9d7);
-   background: -ms-linear-gradient(top, #3e779d, #65a9d7);
-   background: -o-linear-gradient(top, #3e779d, #65a9d7);
-   
-   padding: 20px 40px;
-   
-   /* Cross browser border radius*/
-   -webkit-border-radius: 15px;
-   -moz-border-radius: 15px;
-   border-radius: 15px;
-   
-   /* Cross browser box shadowing */
-   -webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
-   -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
-   box-shadow: rgba(0,0,0,1) 0 1px 0;
-   text-shadow: rgba(0,0,0,.4) 0 1px 0;
-   
-   color: white;
-   font-size: 24px;
-   font-family: Georgia, serif;
-   text-decoration: none;
-   vertical-align: middle;
+/* General */
+
+ a{
+	text-decoration:none;
+ }
+
+
+
+/* Generic button. This button appears on the upside menubar (menu up) */
+
+ .button {
+    border-top: 1px solid #dddddd;
+    background: #ededf2;
+    background: -webkit-gradient(linear, left top, left bottom, from(#ededf2), to(#dddddd));
+    background: -webkit-linear-gradient(top, #ededf2, #dddddd);
+    background: -moz-linear-gradient(top, #ededf2, #dddddd);
+    background: -ms-linear-gradient(top, #ededf2, #dddddd);
+    background: -o-linear-gradient(top, #ededf2, #dddddd);
+    padding: 20px 40px;
+    -webkit-border-radius: 29px;
+    -moz-border-radius: 29px;
+    border-radius: 29px;
+    font-size: 1.3em;
+    text-align:center;
+    font-family: Georgia, serif;
+    text-decoration: none;
+    vertical-align: middle;
+ }
+ .button:hover {
+    border-top: 1px solid #dddddd;
+    background: #ededf2;
+    background: -webkit-gradient(linear, left top, left bottom, from(#dddddd), to(#ededf2));
+    background: -webkit-linear-gradient(top, #dddddd, #ededf2);
+    background: -moz-linear-gradient(top, #dddddd, #ededf2);
+    background: -ms-linear-gradient(top, #dddddd, #ededf2);
+    background: -o-linear-gradient(top, #dddddd, #ededf2);     
+  }
+
+  .button:active {
+    border-top: 1px solid #dddddd;
+    background: #ededf2;
+    background: -webkit-gradient(linear, left top, left bottom, from(#ededf2), to(#dddddd));
+    background: -webkit-linear-gradient(top, #ededf2, #dddddd);
+    background: -moz-linear-gradient(top, #ededf2, #dddddd);
+    background: -ms-linear-gradient(top, #ededf2, #dddddd);
+    background: -o-linear-gradient(top, #ededf2, #dddddd);
    }
-.create_project_button:hover {
-   border-top-color: #28597a;
-   background: #28597a;
-   color: #ccc;
+
+  .button{
+   color: #666;
+   font-family: "Warnock Pro", "Goudy Old Style","Palatino","Book Antiqua", Georgia, serif;
+   font-style:normal;
+   font-weight:normal;
    }
-.create_project_button:active {
-   border-top-color: #1b435e;
-   background: #1b435e;
-   }
-   
-.create_project_button:visited {
-   color:white;
-   }
-   
 
-#create_project_button{
-	margin-left:40%;
-    margin-bottom:10px;
-}
+  
+/* Some styling for all form's fields in the application. */
 
-
-
-
-
-/* Some styling for form input */
-
-.label_cell{
-	
-	font-size: 1.2em;
-}
 
 .input_cell input {
 	font-size:1.5em;
 	height:2em;
-    width: 550px; 
+    width: 600px; 
    -moz-border-radius: 15px;
-   border-radius: 5px;
-  
-} 
+    border-radius: 5px;
+ } 
 
 
 .input_cell input:focus {
-   border-color: #0099FF;
+   /*border-color: #0099FF;*/
 }
 
 
 .input_cell textarea {
 	font-size:1.8em;
 	height:6em;
-    width: 540px; 
+    width: 600px; 
    -moz-border-radius: 15px;
    border-radius: 5px;
   
@@ -100,8 +97,9 @@
    border-color: #0099FF;
 }
 
-
-
+.label_cell{
+	font-size:1.1em;
+}
 
 /* form button */ 
 
@@ -143,32 +141,78 @@
    background: #2c6943;
    }
    
-
-/* Funny with jquery */
-
-.notLongForThisWorld{
+  /* Extra styling borns from registration form, and applied to all forms */
+ 
+ 
+#form{
+   
+    border:solid 2px #dddddd;
+    background: #ededf2;
+    background: -webkit-gradient(linear, left top, left bottom, from(#dddddd), to(#ededf2));
+    background: -webkit-linear-gradient(top, #dddddd, #ededf2);
+    background: -moz-linear-gradient(top, #dddddd, #ededf2);
+    background: -ms-linear-gradient(top, #dddddd, #ededf2);
+    background: -o-linear-gradient(top, #dddddd, #ededf2);     
+    padding:10px;
+} 
+   
+.form_title {
 	
-	border: solid 1px #ababab;
-    text-align:center;
-    font-size: 2em;
+	background: #2972a3;
+    background: -webkit-gradient(linear, left top, left bottom, from(#2972a3), to(#65a9d7));
+    background: -webkit-linear-gradient(top, #2972a3, #65a9d7);
+    background: -moz-linear-gradient(top, #2972a3, #65a9d7);
+    background: -ms-linear-gradient(top, #dddddd, #ededf2);
+    background: -o-linear-gradient(top, #dddddd, #ededf2);     
+	color:white;
+	padding:5px;
+	margin-bottom:0px;
+
 }
 
 
-/* Form errors */
+/* General form errors styling */
 
 .field_with_errors input {
-	border-color: #fbc2c4;
+	border: solid 1px red; /*#fbc2c4;*/
 }
 .field_with_errors label {
 	color: red;
 }
 
-.box{
-
-	overflow:auto;
+.field_with_errors textarea {
+	border-color: #fbc2c4;
 }
 
-/* Projects listing styling */
+#error_explanation h2,#errorExplanation h2{
+    
+    background: #ff0000;
+    background: -webkit-gradient(linear, left top, left bottom, from(#ff0000), to(#ed8282));
+    background: -webkit-linear-gradient(top, #ff0000, #ed8282);
+    background: -moz-linear-gradient(top, #ff0000, #ed8282);
+    background: -ms-linear-gradient(top, #ff0000, #ed8282);
+    background: -o-linear-gradient(top, #ff0000, #ed8282);     
+	color:white;
+	padding:5px;
+	margin-top:10px;
+	
+}
+
+#error_explanation ul,#errorExplanation ul{
+	
+    margin-top:10px;
+
+}
+
+#error_explanation ul li,#errorExplanation ul li{
+	
+    color:red;
+    font-size: 1.3em;
+
+}
+
+
+/* Projects listing styling  <=== MAGARI CONTINUA A RIORDINARE STYLING PER: user,project,ticket*/
 
 #projects_listing{
 	
@@ -291,7 +335,7 @@
 
  }  
 
-/* Updating styling */
+/* Updating ticket styling */
 
 #title_edit{
 	
@@ -374,4 +418,19 @@
 	text-decoration:none;
 	font-size:1.5em;
 }
+
+/* styling user info */
+
+#header_info{
+	
+	display:inline;
+	
+}
+
+#user_log_info{
+	
+}
+
+
+
 

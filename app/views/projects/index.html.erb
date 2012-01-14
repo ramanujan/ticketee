@@ -1,21 +1,9 @@
 <div class="block">
    
-   <div class="column span-24">
- 	
- 	    <div id="create_project_button">
-        
-            <%=link_to "New Project",
-                       new_project_path,
-                       :class=>"create_project_button"%>
-        
-        </div>	
- 	
- 	</div>
-
     <%unless @projects.empty?%>
           
             <div id="projects_listing" class="box rounded column span-16">
-                   <h2 class="alt">Your projects (<%=@projects.size%>)</h2>
+                   <h2 class="alt">Available Projects (<%=@projects.size%>)</h2>
                    <%@projects.each do |project| %>
                         
                         <div class="project_entry_image">

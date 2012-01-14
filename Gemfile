@@ -49,4 +49,8 @@ group :test do
   gem 'spork', '0.9.0.rc9'
   gem 'database_cleaner'
   gem 'factory_girl' 
+  gem 'email_spec' # mi serve a testare il modulo confirmable di devise.   
 end
+
+gem 'devise', '~> 1.4.3'
+
