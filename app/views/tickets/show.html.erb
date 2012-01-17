@@ -37,11 +37,15 @@
        <hr />
        
        <div id="ticket_info" class="column span-24">
-           
+          
+          <div> 
           This ticket was added to <%=link_to "[ #{@project.name} ]", @project%> 
            <%=distance_of_time_in_words_to_now @ticket.created_at,true%> ago
-       
-       
+          </div> 
+          
+          <div>
+            Created by <%=@ticket.user.email%> 
+          </div>       
        </div>
      
    

@@ -16,7 +16,10 @@
 
 class TicketsController < ApplicationController
     
+     # authenticate_user! è fornito da Devise. Probabilmente eseguendo Monkey Patch 
+     # di ActionController::Base
     
+    before_filter :authenticate_user!, :except=>[:index,:show]
     before_filter :find_project, :only=>[:new,:create,:show,:edit,:update,:destroy]
     before_filter :find_ticket, :only=>[:show,:edit,:update,:destroy]
     
@@ -57,8 +60,25 @@ class TicketsController < ApplicationController
   
   
      def create
-              
-           @ticket = @project.tickets.build params[:ticket]
+=begin
+
+    @project e @user sono già nel database. Infatti prima che sia eseguita questa azione,
+    vengono eseguiti dei filtri. Questi sono: authenticate_user! e find_project. 
+    
+    Quindi con la prossima linea, mi assicuro semplicemente che l'associazione tra 
+    @project e @ticket si definita tramite build() che esegue new_ticket.project_id = @project.id , 
+    e tra @ticket e @user ? 
+    
+    (1) Si noti che @user è già persistente, se creassi un nuovo ticket e invocassi
+        ticket.user=@user allora questo metodo aggiornerebbe anche la foreign_key cioè 
+        ticket.user_id = @user.id
+    
+    (2) Quando al costruttore passo :user=>@user viene aggiornata l'associazione, dal costruttore
+        stesso
+        
+    
+=end    
+           @ticket = @project.tickets.build(params[:ticket].merge!(:user=>current_user))
            
            if @ticket.save 
                 flash[:notice]="Ticket has been created."
@@ -99,7 +119,7 @@ class TicketsController < ApplicationController
                redirect_to [@project,@ticket]
           end 
      end
-
+  
      def destroy
           @ticket.delete
           flash[:notice]="Ticket has been deleted."

@@ -24,10 +24,10 @@ Then /^I should be on the (project show page for "[^"]*")$/ do |page_name|
 
 end
 
-Then /^I should see "([^"]*)"$/ do |arg1|
-
+Then /^I should see "([^"]*)"$/ do |arg1|  
+  
   page.should have_content arg1
-
+   
 end
 
 # viewing_projects.feature

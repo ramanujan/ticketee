@@ -1,14 +1,23 @@
 Feature: Creating tickets
  Affinchè si possano assegnare tickets ai progetti
- Come un normale utente dell'applicazione
- Voglio poter selezionare un progetto e 
- creare il nuovo ticket
+ Come un utente autenticato dell'applicazione
+ Voglio poter selezionare un progetto e creare il nuovo ticket. 
+ Ogni utente autenticato può associare un ticket ad uno qualunque dei progetti presenti. 
  
 Background:
   Given There is a project called "Internet Explorer"
+  And there are the following users: 
+  | email                  | password |
+  | user@ticketee.com      | password |
+  
   And I am on the homepage
   When I follow "Internet Explorer"
-  And I follow "New Ticket"	         
+  And I follow "New Ticket"
+  Then I should see "You need to sign in or sign up before continuing."
+  When I fill in "Email" with "user@ticketee.com" 
+  And I fill in "Password" with "password" 
+  And I press "Login"
+  Then I should see "Create a ticket for project: Internet Explorer"	         
 
 Scenario: Creating a ticket
   When I fill in "Ticket title" with "Non-standards compliance"

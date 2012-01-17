@@ -1,4 +1,5 @@
-Given /^that project has a ticket:$/ do |table|
+Given /^"([^"]*)" has created a ticket for this project:$/ do |email, table|
+ 
 
 =begin
 
@@ -11,12 +12,14 @@ Given /^that project has a ticket:$/ do |table|
   [{"title"=>"Make it shiny!", "description"=>"Gradients! Starbursts! Oh my!"}]
     
   
+  Si noti inoltre che in questo step utilizzo @project che è stato caricato dallo step
+  precedente "And There is a project called TextMate 2"
     
 =end  
    
    table.hashes.each do |ticket_attr|
      
-   @project.tickets.create! ticket_attr
+      @project.tickets.create! ticket_attr.merge!(:user=>User.find_by_email!(email) )
 
    end
 
