@@ -10,8 +10,7 @@
       
       per determinare i giusti URLs nel caso di risorse nested. In particolare eseguendo 
       redirect_to [@project,@ticket] Rails determina che si vuole l'URL generato da
-      
-       project_ticket_path(@project,@ticket)
+      project_ticket_path(@project,@ticket)
 =end
 
 class TicketsController < ApplicationController

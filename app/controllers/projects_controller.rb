@@ -1,5 +1,6 @@
 class ProjectsController < ApplicationController
- 
+
+ before_filter :authorize_admin!, :except=>[:show,:index] # In application_controller.rb
  before_filter :find_project, :only=>[:show,:edit,:update] #Potresti utilizzare anche :except
  
  def find_project

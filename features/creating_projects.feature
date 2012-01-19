@@ -1,13 +1,18 @@
 Feature: Creating projects
  Al fine di avere dei progetti a cui assegnare tickets,
- come un normale utente dell'applicazione
+ come amministratore dell'applicazione
  li voglio creare facilmente. In pratica 
  voglio poter premere un pulsante per richiedere la creazione
  del progetto, riempire la form che appare e quindi creare il 
  progetto.
 
 Background:
- Given I am on the homepage
+ Given there are the following users:
+ | email                      | password     |admin|
+ | administrator@ticketee.com | password     |true |
+ 
+ And I am signed in as "administrator@ticketee.com"
+ And I am on the homepage
  When I follow "New Project"
 
 Scenario: Creating a project

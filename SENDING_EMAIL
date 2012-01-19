@@ -1,0 +1,32 @@
+Ci sono tre step da seguire per riuscire a spedire delle email con Rails.
+
+1) Configurare come le email devono essere spedite.
+2) Determinare quando le email devono essere spedite.
+3) Determinare quale contenute devono avere le email spedite. 
+
+
+La configurazione dell'impianto email, può essere fatta a tre livelli:
+
+1) A livello dell'intera applicazione
+2) A livello TEST
+3) A livello DEVELOPMENT
+4) A livello PRODUCTION
+
+In questa sede configuriamo il mailer a livello development.  Si tratta di dire come spedire l'email:
+
+  config.action_mailer.delivery_method = :smtp | :sendmail | :test
+
+A livello development, dentro il blocco 
+  
+   Ticketee::Application.configure do
+   ..
+   end
+   
+ In Rails un mailer è una classe che viene creata in app/mailers. Contiene uno o più metodi
+ ognuno dei quali corrisponde ad un modello di email che l'applicazione può spedire. 
+ Per creare il body di queste email, questi metodi utilizzano views, proprio come il 
+ controller utilizza views per generare HTML oppure XML. 
+ 
+ Creiamo allora un mailer, e cominciamo a creare un metodo che deve essere utilizzato per spedire la
+ conferma della registrazione. 
+      

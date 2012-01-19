@@ -8,7 +8,7 @@
        
         1) Uno sviluppatore può leggere cosa dovrebbe fare la feature e potrà scrivere il codice. 
         2) Un cliente può capire cosa fa un certo requisito richiesto (feature)
-        3) SI viene a creare un automated test che possiamo lanciare in qualsiasi momento.
+        3) Si viene a creare una suite automatizzata di test che possiamo lanciare in qualsiasi momento.
        
        Invece per quanto riguardo l'altro strumento di testing Cucumber esso utilizza un linguaggio
        noto come GHERKIN. Esso è simile a 

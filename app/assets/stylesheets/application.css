@@ -337,6 +337,10 @@
 
  }  
 
+
+
+
+
 /* Updating ticket styling */
 
 #title_edit{
@@ -361,9 +365,9 @@
 	margin:1.1em;
 }
 
-/* Ticket styling */ 
 
-#ticket_showing{
+
+#ticket{
 	
 	background-color: #ededf2;	
     border: solid 1px #dddddd;
@@ -372,13 +376,13 @@
       
 }
 
-#ticket_showing div, #ticket_showing div h2{
+#ticket div, #ticket div h2{
 	
 	display:inline;
     margin-right:1.2em; 
 }
 
-#ticket_title_show { /* Attenzione non chiamarlo ticket_title collide con form */
+#ticket_title_field { /* Attenzione non chiamarlo ticket_title collide con form */
 	
 	overflow: scroll;
     font-size: 0.8em;  
@@ -389,21 +393,30 @@
 	color:red;
 }
 
-#ticket_info{
-	font-size: 1.1em;
+#ticket_info div{
+	font-size: 1.4em;
+	display:block;
+	
 }
+
+
 
 #ticket_info a{
 	text-decoration:none;
-	font-size:1.2em;
+	
 }
 
 
-#ticket_description_show {
+#ticket_description_field{
 	
 	overflow:auto;
-    font-size:1.4em; 
+    font-size:1.5em; 
 }
+
+
+
+
+
 
 
 .project_ticket_entry_image{
@@ -430,7 +443,9 @@
 }
 
 #user_log_info{
-	
+	margin-left:20px;
+	font-size: 1.1em;
+	font-weight:bold;
 }
 
 

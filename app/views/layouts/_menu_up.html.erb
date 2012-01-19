@@ -1,16 +1,25 @@
 <div class="block">	
-		
-		 <%=link_to(new_project_path) do %>
-             <div class="button column span-2 ">New Project</div>
-          <%end%>
-		
+		  
+		  <%=link_to(root_path) do %>
+          
+               <div class="button column span-2 ">Home</div>    
+	      
+	      <%end%>
+	   
+	      
+	      <%=admins_only do%>
+	      
+	          <%=link_to(new_project_path) do %>
+                   <div class="button column span-2 ">New Project</div>
+               <%end%>
+		  
+		  <%end%> 
+		   
        <%if user_signed_in? %>   
              
-         
-	      
-	      <%=link_to "#" do %>
-               <div class="button column span-2 ">Logout</div>
-	      <%end%>
+           <%=link_to "#" do %>
+                 <div class="button column span-2 ">Logout</div>
+	       <%end%>
 	         
 	   <%else%>
 	   
@@ -22,16 +31,11 @@
                <div class="button column span-2 ">Login</div>
           <%end%>
 	
-	   
 	   <%end%>
 	    
-	      <%=link_to(root_path) do %>
-               <div class="button column span-2 ">Home</div>    
-	      <%end%>
-	   
-	      <%=link_to "#" do %>
+	   <%=link_to "#" do %>
                <div class="button column span-2 ">Info</div>
-          <%end%>  
+       <%end%>  
 	   
 	    <hr class="space"/>
         <hr /> 

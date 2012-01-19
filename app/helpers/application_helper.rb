@@ -28,7 +28,22 @@ module ApplicationHelper
        
     link_to(image_tag(image_name), linked_to )   
        
-    end   
+  end   
   
+=begin
+          Il metodo try() evidentemente è inserito da Rails tramite ActiveModel.  
+          try() ci permette di invocare uno specificato metodo su di un oggetto che
+          può essere anche nil e quindi ci evita di gestire un'eccezione su oggetti
+          nil. Se quindi il metodo non esiste, oppure current_user ritorna nil try()
+          ritorna nil.
+           
+=end  
+  
+  def admins_only(&block)
+    block.call if current_user.try(:admin?)
+    nil
+  end   
+
+
 
 end

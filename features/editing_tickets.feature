@@ -27,5 +27,5 @@ Scenario: Updating a ticket
  When I fill in "Ticket title" with "Make it really shiny!!"
  And I press "Update Ticket"
  Then I should see "Ticket has been updated."
- And I should see "Make it really shiny!!" within "#ticket_title_show h2"     
+ And I should see "Make it really shiny!!" within "#ticket_title_field h2"     
  But I should not see "Make it shiny!"

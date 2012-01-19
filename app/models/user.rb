@@ -69,6 +69,17 @@
      2) Spedizione token via email e impostazione confirmation_sent. 
      3) Utente clicca e conferma. 
      4) Impostazione confirmed_at alla data corrente.                    
+      
+     Autenticazione e Autorizzazione.
+     
+     Con il termine autenticazione, si indica l'insieme di funzionalità implementate dalla nostra
+     applicazione per riconoscere un utente. 
+     
+     Con il termine autorizzazione, si indica l'insieme di funzionalità implementate dalla nostra
+     applicazione, utilizzato per riconoscere i privilegi di un utente autenticato, e cioè un determinato
+     utente, cosa può fare e cosa non può fare. 
+      
+      
                        
 =end
 

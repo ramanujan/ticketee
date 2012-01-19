@@ -1,7 +1,14 @@
 Feature: Editing Projects
  Per aggiornare i dati relativi ad un progetto,
- Come un normale utente
+ Come un amministratore
  Voglio essere in grado di farlo attraverso una comoda interfaccia
+ 
+Background:
+Given there are the following users:
+ | email                      | password     |admin|
+ | administrator@ticketee.com | password     |true |
+ 
+ And I am signed in as "administrator@ticketee.com" 
  
 Scenario: Updating a project
 
