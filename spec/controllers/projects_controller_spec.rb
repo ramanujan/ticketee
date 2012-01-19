@@ -85,23 +85,36 @@
           end 
          
          In questo modo l'inclusione è limitata solo ai test per i controllers.
+       
+       
+         OSSERVAZIONE: Al finde di essere DRY, abbiamo cambiato 
+            
+            let(:user) do
           
+              user = Factory(:user)
+          
+              user.confirm!
+          
+              user
+            end
+          
+        con let(:user) do
+                
+                create_user!
+                
+            end  
+
+        dove create_user! è un helper situato in support dentro seed_helepers.rb.
+
 =end
 
 require 'spec_helper'
 
 describe ProjectsController do
        
-       let(:user) do
-          
-          user = Factory(:user)
-          
-          user.confirm!
-          
-          user
-          
-       
-       end
+        let(:user) do
+           create_user! 
+        end
        
        let(:project) do
          project = Factory(:project)

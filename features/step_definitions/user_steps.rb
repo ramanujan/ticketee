@@ -13,7 +13,7 @@ Given /^there are the following users:$/ do |table|
        
        if unconfirmed.nil? || unconfirmed=='false'
           
-          @user.confirm!
+          @user.confirm! #Aggiorna anche il database. 
        end
        
        @users << @user

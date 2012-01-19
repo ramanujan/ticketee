@@ -5,6 +5,11 @@
 
 Ticketee::Application.routes.draw do
   
+  # get "users/index"
+
+  
+ 
+
   devise_for :users
   
   
@@ -23,6 +28,10 @@ Ticketee::Application.routes.draw do
     end
 
   match "pages/jquery" => "pages#demo_jquery"
+
+   namespace :admin do
+         resources :users
+      end 
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
