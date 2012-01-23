@@ -6,20 +6,21 @@
 Ticketee::Application.routes.draw do
   
   # get "users/index"
+   get "pages/jquery" => "pages#demo_jquery"
+   
+   get "pages/home" 
+   
+   get "payments/index"
 
-  
- 
+   get "payments/confirm"
+
+   get "payments/complete"
+
+   get "payments/checkout"
+    
+    
 
   devise_for :users
-  
-  
-  get "payments/index"
-
-  get "payments/confirm"
-
-  get "payments/complete"
-
-  get "payments/checkout"
   
   root :to => 'projects#index'
  
@@ -27,11 +28,12 @@ Ticketee::Application.routes.draw do
     resources :tickets
     end
 
-  match "pages/jquery" => "pages#demo_jquery"
-
    namespace :admin do
+         root :to=>"base#index" # Si riferisce a Admin::BaseController.index 
          resources :users
       end 
+
+
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

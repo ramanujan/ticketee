@@ -1,69 +1,69 @@
 <div class="block">
-	    
-	    <div id="project_showing" class="rounded column span-23">
-	   
-	        <div>   
-	             
-	             <div id="project_name_show">
-                     <h2 class="alt"><%=@project.name%></h2>
-                 </div>
+     <div id="project_show" class="cool_box rounded column span-23 last">
+          
+          <div id="project_name_field">
+                         <h2 class="alt">Project: <%=@project.name%></h2>
+          </div>
+          
+          <hr/>
                 
-                 <%=admins_only do%>
-                     <div id="project_edit">
+          <%=admins_only do%>
+                     
+                     <div id="project_edit" class="sequential">
+                     
                        <%=link_to "Edit Project",edit_project_path(@project),:class=>"command_button"%>
+                    
                      </div>	
                  
-                     <div id="project_delete">
+                      <div id="project_delete" class="sequential">
+                      
                           <%=link_to "Delete Project",
                                  project_path(@project),
                                  :method=>"delete",
                                  :confirm=>"Are you sure to delete the project '#{@project.name}' ?",
                                  :class=>"command_button"%>
-                     </div>	 
+                      </div>	 
                
-                  <%end%>
+           <%end%>
                  
                  
-                 <div id="project_add_ticket">
+            <div id="project_add_ticket" class="sequential">
                      <%=link_to "New Ticket",new_project_ticket_path(@project),:class=>"command_button"%>
-                 </div>	
-                 
-               
-                  
-            </div>
+             </div>
+             
+             <hr class="space"/>
+             <hr />	
+                    
+                   
+     </div> 
+     
+     <hr class="space"/>
        
-       </div> 
-       
-       <hr class="space"/>
-       
-        <%unless @project.tickets.empty?%>
+     <%unless @project.tickets.empty?%>
           
-            <div id="project_tickets_list" class="box rounded column span-16">
+            <div id="ticket_index" class="cool_box rounded column span-23 last">
                    
                    <h2 class="alt">Associated tickets (<%=@project.tickets.size%>)</h2>
                    
-                   <%@project.tickets.each do |ticket| %>
+                    <%@project.tickets.each do |ticket| %>
                         
-                        <div class="project_ticket_entry_image">
-                     	     <%=linked_image_tag(:image_name=>"fiocco.jpg",
-                     	                         :linked_to=>[@project,ticket])%> 
-                         </div>                 
+                             <div class="sequential">
+                     	                 <%=linked_image_tag(:image_name=>"ticket_piccolo.png",
+                     	                                     :linked_to=>[@project,ticket])%> 
+                              </div>                 
                          
-                         <div class="project_ticket_entry_name">
-                     	     <%=link_to ticket.title, [@project,ticket]%> 
-                         </div>     
+                              <div class="sequential ticket_name_field">
+                     	         <%=link_to ticket.title, [@project,ticket]%> 
+                              </div>     
                      
-                         <%=linked_image_tag(:image_name=>"right_arrow_small.png",
+                               <%=linked_image_tag(:image_name=>"right_arrow_small.png",
                                              :linked_to=>[@project,ticket])%>            
                      
-                         <hr />  
-                   <%end%>
+                                <hr />  
+                      <%end%>
              </div> 
         <%end%> 
      
      
-     
-     
-
 </div>
 

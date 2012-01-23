@@ -1,4 +1,6 @@
 =begin
+     
+      
       Qui sotto utilizziamo un blocco before(). Questo blocco viene eseguito prima di ogni esempio
       ovvero prima di ogni test, cioè dell'esecuzione di ogni blocco do .. end dentro it, piazzati
       nel  blocco corrente context oppure describe.

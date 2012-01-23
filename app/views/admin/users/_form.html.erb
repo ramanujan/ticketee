@@ -1,0 +1,42 @@
+<%=form_for [:admin,@user] do |f| %>
+       <%=f.error_messages%>
+       <div id="form_for_user">
+      
+               <div class="label_cell">
+                    <%=f.label :email%>
+	           </div>
+	  
+	           <div class="input_cell">
+	  	            <%=f.text_field :email%>
+               </div> 
+           
+                <div class="label_cell">
+                    <%=f.label :password%>
+	           </div>
+	  
+	           <div class="input_cell">
+	  	            <%=f.password_field :password%>
+               </div> 
+           
+               <div class="label_cell">
+                    <%=f.label :password_confirmation%>
+	           </div>
+	  
+	           <div class="input_cell">
+	  	            <%=f.password_field :password_confirmation%>
+               </div> 
+          
+	    
+	            <div class="check_box sequential">
+               	    <%=f.check_box :admin%>
+               </div>   
+               
+                <div class="check_box_label_cell sequential">
+                    <%=f.label :admin, "Is an admin?"%>
+	           </div>
+                   
+               <div id="sub">
+                 <%=f.submit :class=>"formButton"%>
+               </div> 
+        </div> 
+<%end%>

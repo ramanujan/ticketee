@@ -1,22 +1,41 @@
 <div class="block">
-   
-    <%unless @projects.empty?%>
-          
-            <div id="projects_listing" class="box rounded column span-16">
-                   <h2 class="alt">Available Projects (<%=@projects.size%>)</h2>
-                   <%@projects.each do |project| %>
-                        
-                        <div class="project_entry_image">
-                     	     <%=linked_image_tag(:image_name=>"fiocco.jpg",:linked_to=>project)%> 
-                         </div>                 
+              <div id="project_index" class="cool_box rounded column span-16">
+                         <h2 class="alt">Available Projects (<%=@projects.size%>)</h2>
                          
-                         <div class="project_entry_name">
-                     	     <%=link_to project.name, project%> 
-                         </div>     
-                         <%=linked_image_tag(:image_name=>"right_arrow_small.png",:linked_to=>project)%>            
-                         <hr />  
-                   <%end%>
-             </div> 
-    <%end%> 
+                         <%=admins_only do%>  
+                                        <div id="project_new">
+                                               <%=link_to "New Project",
+                                                   new_project_path,
+                                                   :class=>"command_button"%>
+                                        </div>	
+                         <%end%>  
+                         
+                         <hr class="space"/>
+                         <hr /> 
+               
+               <%unless @projects.empty?%>  
+                               <%@projects.each do |project| %>
+                                      <div class="project_image">
+                     	                 <%=linked_image_tag(:image_name=>"project_piccolo.png",:linked_to=>project)%> 
+                                      </div>                 
+                         
+                                     <div class="project_name_field">
+                     	                 <%=link_to project.name, project%> 
+                                     </div>     
+                                     
+                                     <%=linked_image_tag(:image_name=>"right_arrow_small.png",:linked_to=>project)%>            
+                                     
+                                     <hr />  
+                               <%end%>
+               
+               <%end%>         
+             
+            </div> 
+            
+            <div class="cool_box rounded column span-6">
+               <hr class="space"/>
+               <h2 class="alt">Box</h2>
+               <hr />
+            </div>
 
 </div>

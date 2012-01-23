@@ -1,2 +1,39 @@
-<h1>Admin::Users#index</h1>
-<p>Find me in app/views/admin/users/index.html.erb</p>
+<div class="block">
+              <div id="user_index" class="cool_box rounded column span-23 last">
+                         <h2 class="alt sequential">Users present in the system (<%=@users.size%>)</h2>
+                         <div id="user_new" class="sequential">
+                                         <%=link_to "New User",
+                                            new_admin_user_path,
+                                            :class=>"command_button"%>
+                          </div>	
+                        
+                         
+                         <hr class="space"/>
+                         <hr /> 
+                         
+                         <%unless @users.empty?%> 
+                                        <%@users.each do |user| %>
+                                                <div class="user_info_block">
+                                                     
+                                                     <div class="user_image">
+                     	                                <%=linked_image_tag(:image_name=>"person.png",
+                     	                                                    :linked_to=>admin_user_path(user) )%> 
+                                                     </div>   
+                                                     
+                                                     <div class="user_email_field">
+                     	                                <%=link_to user.email,[:admin,user]%> 
+                                                     </div>      
+                                     
+                                                     <%=linked_image_tag(:image_name=>"right_arrow_small.png",
+                                                                         :linked_to=>admin_user_path(user) )%>             
+                                                </div> 
+               
+     
+                                       <%end%>	
+               
+                        <%end%>         
+             
+            </div> 
+     
+
+</div>

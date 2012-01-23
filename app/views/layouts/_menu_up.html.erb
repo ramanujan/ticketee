@@ -1,44 +1,45 @@
-<div class="block">	
+<div id="menu_up" class="block">	
+		  <hr class="space"/>
+		  <hr />
 		  
 		  <%=link_to(root_path) do %>
           
                <div class="button column span-2 ">Home</div>    
 	      
 	      <%end%>
-	   
-	      
-	      <%=admins_only do%>
-	      
-	          <%=link_to(new_project_path) do %>
-                   <div class="button column span-2 ">New Project</div>
-               <%end%>
 		  
-		  <%end%> 
+		   <%=admins_only do%>
+	               
+	            <%=link_to(admin_root_path) do%>  
+	               <div id="admin" class="button column span-2 ">Admin</div>
+                 <%end%>
+           	        	
+           <%end%>   
 		   
-       <%if user_signed_in? %>   
+		 
+		    <%if user_signed_in? %>   
              
-           <%=link_to "#" do %>
+               <%=link_to "#" do %>
                  <div class="button column span-2 ">Logout</div>
-	       <%end%>
+	           <%end%>
 	         
-	   <%else%>
+	        <%else%>
 	   
-	      <%=link_to(new_user_registration_path) do %>
-                <div class="button column span-2 ">Sign up</div>
-          <%end%>
+	            <%=link_to(new_user_registration_path) do %>
+                    <div class="button column span-2 ">Sign up</div>
+                <%end%>
          
-          <%=link_to(new_user_session_path) do %>
-               <div class="button column span-2 ">Login</div>
-          <%end%>
+                <%=link_to(new_user_session_path) do %>
+                     <div class="button column span-2 ">Login</div>
+                 <%end%>
 	
-	   <%end%>
+	         <%end%>
 	    
-	   <%=link_to "#" do %>
-               <div class="button column span-2 ">Info</div>
-       <%end%>  
-	   
-	    <hr class="space"/>
-        <hr /> 
-
+	        <%unless user_signed_in?%>
+		         <%=link_to "#" do %>
+                     <div class="button column span-2 ">Info</div>
+                 <%end%>     
+		    <%end%>
+	  
 </div>
 

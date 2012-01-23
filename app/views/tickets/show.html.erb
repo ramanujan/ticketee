@@ -1,18 +1,18 @@
 <div class="block">
 	 
-	 <div id="ticket" class="rounded column span-23">
-	   <div>   
-	   	    <div id="ticket_title_field">
+	 <div id="ticket" class="cool_box rounded column span-23">
+	  
+	   	    <div id="ticket_title_field" class="sequential">
                  <h2 class="alt"><%=@ticket.title%></h2>
             </div>
                 
-            <div id="ticket_edit">
+            <div id="ticket_edit" class="sequential">
                  <%=link_to "Edit Ticket",
-                             edit_project_ticket_path(@project,@ticket),
+                             edit_project_ticket_path(@project,@ticket), #Eventualmente potevi passare [:edit,@project,@ticket]
                              :class=>"command_button"%>
             </div>	
                  
-            <div id="ticket_delete">
+            <div id="ticket_delete" class="sequential">
                  
                  <%=link_to "Delete Ticket",
                              project_ticket_path(@project,@ticket),
@@ -20,7 +20,7 @@
                              :confirm=>"Are you sure to delete ticket '#{@ticket.title}' associatedo to project '#{@project.name}' ?",
                              :class=>"command_button"%>
             </div>	 
-        </div>          
+          
        
        
        <hr class="space"/>
@@ -34,7 +34,7 @@
        </div>
      
        <hr class="space"/>
-       <hr />
+       
        
        <div id="ticket_info" class="column span-24">
           

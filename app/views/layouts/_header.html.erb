@@ -2,8 +2,8 @@
 		<div class="column span-24">
 			<div>
 				<h1> 
-					<%=linked_image_tag(:image_name=>"fioccoGrande.jpg", :linked_to=>root_path)%>
-					<span class="alt">Snow Ticketee : </span>
+					<%=linked_image_tag(:image_name=>"fioccoGrande.png", :linked_to=>root_path)%>
+					<span class="alt">Easy Ticketee : </span>
 				    Agile Project Tickets Tracking 
 				</h1>
 				
@@ -12,9 +12,9 @@
 				
 				 <h2 class="alt" id="header_info">This application show what you get with RoR</h2>
 				 <%if user_signed_in? %>
-				    <span id="user_log_info"> Signed in as <%=current_user.email%></span>
+				    <span id="user_log_info"> Signed in as <%=current_user%></span>
 				 <%end%> 
-				<hr />
+				
 			</div>
 		</div>
 </div>

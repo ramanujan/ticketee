@@ -1,0 +1,28 @@
+<div class="block">
+              
+              <div id="administration_zone" class="cool_box rounded column span-23 last">
+                         
+                     <div id="administration_header">
+                          <%=image_tag("admin_min.png",:vertical_align=>:middle)%> 
+                          <span id="administration_title" class="alt">Administration Zone </span> 
+                     </div>
+              
+                     <hr class="space"> 
+                     
+                     <div id="users" class="column span-3">
+                     	<%=linked_image_tag(:image_name=>"users_small.png", 
+                     	                    :linked_to=>admin_users_path)%>
+                        
+                        <%=link_to(admin_users_path) do%>
+                            <div>Users</div>
+                        <%end%>                 	
+                        	
+                     </div>  
+                     
+                     
+                     
+                          
+                                      
+            </div> 
+
+</div>

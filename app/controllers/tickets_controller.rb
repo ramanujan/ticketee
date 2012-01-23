@@ -17,6 +17,11 @@ class TicketsController < ApplicationController
     
      # authenticate_user! è fornito da Devise. Probabilmente eseguendo Monkey Patch 
      # di ActionController::Base
+     # Funziona controllando che email e password spediti via cookie corrispondano a qualcuno presente. 
+     # Se l'utente non è autenticato, evidentemente lancia un'eccezione. Per default
+     # questa eccezione è catturata e gestita da Devise che ha come comportamento quello
+     # di mostrare la pagina di sign-in con un messaggio flash. Questo implica che Devise 
+     # redirezione ad un'altro controller l'azione corrente.  
     
     before_filter :authenticate_user!, :except=>[:index,:show]
     before_filter :find_project, :only=>[:new,:create,:show,:edit,:update,:destroy]

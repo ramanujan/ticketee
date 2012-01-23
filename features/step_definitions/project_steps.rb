@@ -5,7 +5,9 @@ Given /^I am on the (.+)$/ do |page_name|
 end
 
 When /^I follow "([^"]*)"$/ do |arg1|
+  
    click_link arg1 # scan id,text or value  
+  
 end
 
 When /^I fill in "([^"]*)" with "([^"]*)"$/ do |arg1, arg2|

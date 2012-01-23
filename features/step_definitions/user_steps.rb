@@ -32,5 +32,9 @@ Given /^I am signed in as "([^"]*)"$/ do |email|
             Then I should see "Signed in successfully."}
 end
 
+When /^I check "([^"]*)"$/ do |arg1|
+  check(arg1)
+end
+
 
 
