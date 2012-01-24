@@ -51,7 +51,7 @@
 class Admin::UsersController < Admin::BaseController
   before_filter :authorize_admin! # Metodo definito in application_controller.rb
   
-  before_filter :find_user,:only=>[:show,:edit,:update]
+  before_filter :find_user,:only=>[:show,:edit,:update,:destroy]
   
   def find_user 
        
@@ -161,5 +161,19 @@ class Admin::UsersController < Admin::BaseController
   end 
 
 end 
+
+ def destroy
+    
+     if @user == current_user 
+        flash[:notice]="You cannot delete yourself! :-) "
+     else 
+       @user = User.destroy(params[:id])
+       flash[:notice]="User has been deleted."
+     end
+     
+     redirect_to admin_users_path  
+      
+ end
+
 
 end

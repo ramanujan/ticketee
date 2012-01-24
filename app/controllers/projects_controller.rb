@@ -176,7 +176,11 @@ end
 
 
 
-
+=begin
+         Attenzione: Non si è stabilita nessuna associazione parent-child tra i ticket e gli utenti. 
+                     Questo significa che alla cancellazione di un utente, non seguirà la cancellazione
+                     dei ticket associati.      
+=end
 def destroy
      
      @project = Project.destroy(params[:id])
