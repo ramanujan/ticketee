@@ -51,11 +51,12 @@
 }
 
 
-/* Scurire bordi coolbox, in alcune zone è meglio. */ 
+.gray_bottom_border{
+	border-bottom: solid 1px #c6c6c6;
+}
 
-.dark_border{
-	border-bottom: solid 2px #444;
-    border-right: solid 1px #444;
+.gray_top_border{
+	border-top: solid 1px #c6c6c6;
 }
 
 
@@ -472,9 +473,6 @@ margin-left:10px;
   
 }
 
-#project_show div, #project_show div h2{
-	
-}
 
 
 #project_name_field { /* Attenzione non lo chiamare project_name collide con form */
@@ -647,6 +645,7 @@ a div:hover{
      left:40px;
 	}
 
+
 /* User styling */ 
 
 #user_index{
@@ -688,6 +687,34 @@ a div:hover{
 }
 
 
+/* User show() action */ 
+
+#user_show{
+	
+    margin-left:0.5em;
+	padding: 1.5em;	
+	
+}
+
+#user_info {
+	color:#444;  
+    padding: 5px 10px;
+    font-size: 1.2em;
+    font-family: Georgia, serif;
+    
+    text-shadow: rgba(255,255,255,.8) 0 1px 0; 
+	
+	
+}
+
+#user_edit{
+	
+}
+
+
+#user_delete a:hover{
+	color:red;
+}
 
 
 
@@ -698,8 +725,11 @@ a div:hover{
 
 
 
+/* Miscellanea di prove JQuery. Si noti che removed ha bacground di un colore rosso di default da blueprint. */
 
-
+.removed{
+	
+}
 
 
 

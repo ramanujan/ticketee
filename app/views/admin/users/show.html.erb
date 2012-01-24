@@ -1,1 +1,68 @@
-ciao	
+<div class="block">
+     <div id="user_show" class="cool_box rounded column span-23 last">
+          
+          <div id="user_email_field">
+                         <h2 class="alt">User: <%=@user%></h2>
+          </div>
+          
+          <hr />
+          
+          <div id="user_info" class="gray_bottom_border">
+                   <div class="generic_field column span-5">Created at :</div> 
+                   <div class="generic_value column span-5"><%=@user.created_at%></div><br />
+                   
+                   <div class="generic_field column span-5">Confirmation sent at :</div> 
+                   <div class="generic_value column span-5"><%=@user.confirmation_sent_at%></div><br />
+                   
+                   <div class="generic_field column span-5">Confirmed by user at :</div>
+                   <div class="generic_value column span-5"><%=@user.confirmed_at%></div><br />
+                   
+                   <div class="generic_field column span-5">Last update at :</div>
+                   <div class="generic_value column span-5"><%=@user.updated_at%></div><br />
+                   
+                   <div class="generic_field column span-5">Number of logins :</div>
+                   <div class="generic_value column span-5"><%=@user.sign_in_count%></div><br />
+                   
+                   <div class="generic_field column span-5">Last login at :</div>
+                   <div class="generic_value column span-5"><%=@user.last_sign_in_at%></div><br />
+                   
+                   <div class="generic_field column span-5">Last login IP :</div>
+                   <div class="generic_value column span-5"><%=@user.last_sign_in_ip%></div><br />
+                   
+                  <div class="generic_field column span-5"> Current login at :</div>
+                  <div class="generic_value column span-5"><%=@user.current_sign_in_at %></div><br />
+                   
+                  <div class="generic_field column span-5"> Current login IP :</div>
+                  <div class="generic_value column span-5"><%=@user.current_sign_in_ip %></div>                
+                  
+                  <hr class="space">                
+                                   
+          </div>
+          
+          
+          <hr class="space">
+                
+          <div id="user_edit" class="sequential">
+              <%=link_to "Edit User",[:edit,:admin,@user],:class=>"command_button"%>
+                    
+          </div>	
+                 
+          <div id="user_delete" class="sequential">
+                      
+             <%=link_to "Delete User",
+                        "",
+                        :method=>"delete",
+                        :confirm=>"Are you sure to delete the user '#{@user}' ?",
+                        :class=>"command_button"%>
+          </div>	 
+               
+        
+             
+          <hr class="space"/>
+          <hr />	
+          <hr class="space"/>        
+     </div> 
+     
+    
+</div>
+

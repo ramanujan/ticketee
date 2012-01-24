@@ -16,12 +16,17 @@
                                                 <div class="user_info_block">
                                                      
                                                      <div class="user_image">
-                     	                                <%=linked_image_tag(:image_name=>"person.png",
-                     	                                                    :linked_to=>admin_user_path(user) )%> 
+                     	                                
+                     	                             <%= user.admin? ?  
+                     	                                      linked_image_tag(:image_name=>"administrator.png",
+                     	                                                       :linked_to=>admin_user_path(user) ) :  
+                     	                                      linked_image_tag(:image_name=>"person.png",
+                     	                                                       :linked_to=>admin_user_path(user) ) %> 
+                                                     
                                                      </div>   
                                                      
                                                      <div class="user_email_field">
-                     	                                <%=link_to user.email,[:admin,user]%> 
+                     	                                <%=link_to user,[:admin,user]%> 
                                                      </div>      
                                      
                                                      <%=linked_image_tag(:image_name=>"right_arrow_small.png",

@@ -51,7 +51,7 @@
 class Admin::UsersController < Admin::BaseController
   before_filter :authorize_admin! # Metodo definito in application_controller.rb
   
-  before_filter :find_user,:only=>[:show]
+  before_filter :find_user,:only=>[:show,:edit,:update]
   
   def find_user 
        
@@ -120,6 +120,46 @@ class Admin::UsersController < Admin::BaseController
          
   end 
 
+  def edit 
+      @title="Editing user #{@user}"
+      
+        
+  end
+   
+  def update
 
+=begin
+       Se desideri aggiornare solo il campo email, ma non password e password_confirmation allora devi cancellare 
+       dall'hash params[:user], le chiavi password e password_confirmation. Altrimenti l'oggetto non sarà valido.    
+        
+=end  
+  
+  begin     
+    
+    if params[:user][:password].blank?
+    
+       params[:user].delete(:password) 
+       params[:user].delete(:password_confirmation)
+    
+    end
+    
+    if @user.update_attributes(params[:user])
+        flash[:notice]="User has been updated."
+        @user.admin = (params[:user][:admin]=='1')
+        @user.save!
+        
+        redirect_to [:admin,@user]
+    else
+        flash[:error]="User has not been updated."
+        @title="User update errors - "
+        render 'edit'
+    end
+
+  rescue => msg
+       flash[:error]="User has not been updated (exceptionally update error: =>#{msg})."
+       redirect_to root_path
+  end 
+
+end 
 
 end
