@@ -52,7 +52,16 @@
 
 
 .gray_bottom_border{
-	border-bottom: solid 1px #c6c6c6;
+	border-bottom: solid 1px #c1c1c1;
+}
+
+
+.gray_bottom_border_variant_1{
+	border-bottom: solid 1px #ccc;
+}
+
+.emerald_bottom_border{
+	border-bottom: solid 1px #34a7b4;
 }
 
 .gray_top_border{

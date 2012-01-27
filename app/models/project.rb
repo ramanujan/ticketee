@@ -8,6 +8,8 @@ class Project < ActiveRecord::Base
    
    validates :name, :length => {:maximum=>30}   
 
- 
+   has_many :permissions, :as=>:thing 
+   
+   scope :readable_by, lambda{ |user| joins(:permissions).where(:permissions=>{:action=>"view",:user_id=>user.id})}  
 
 end

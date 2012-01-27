@@ -1,16 +1,36 @@
-
-
-
 class ProjectsController < ApplicationController
-
+ 
  before_filter :authorize_admin!, :except=>[:show,:index] # In application_controller.rb
+ 
+ before_filter :authenticate_user!, :except=>[:index]# definito da Devise. 
+ 
  before_filter :find_project, :only=>[:show,:edit,:update] #Potresti utilizzare anche :except
  
  def find_project
           
-        @project = Project.find(params[:id])
+=begin  @project = Project.find(params[:id])
         
-        rescue ActiveRecord::RecordNotFound
+        Questa linea è stata commentata, poichè adesso in tutte le operazioni che implicano 
+        reading di un progetto dal database, devo controllare i permessi. In questo caso allora,
+        voglio restringere una find() in modo che dal database vengano letti solo i record su
+        cui l'utente corrente ha dei permessi.
+        
+        Questo obiettivo si raggiunge con gli SCOPEs di ActiveRecord. Si deve cioè utilizzare
+        ActiveRecord#scope. Questo metodo sostanzialmente fornisce un meccanismo per definire 
+        un metodo, che possiamo invocare nella nostra classe del MODEL (Project),oppure in una collezione
+        relativa ad un'associazione (che comunque si comporta come una classe del MODEL), per ritornare
+        un sottoinsieme di records e non tutti quelli possibili. 
+        
+            
+=end
+        
+         if(current_user.admin?) 
+           @project=Project.find(params[:id])
+         else
+           @project = Project.readable_by(current_user).find(params[:id])
+         end   
+         
+         rescue ActiveRecord::RecordNotFound
         
          flash[:alert] = "The project you were looking for could not be found." 
          redirect_to projects_path 

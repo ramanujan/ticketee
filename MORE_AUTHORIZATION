@@ -1,0 +1,84 @@
+Esistono due meccanismi principali di AUTORIZZAZIONE:
+
+ 1) WHITE LIST (SE SEI NELLA LISTA ENTRI, ALTRIMENTI NON ENTRI) 
+ 2) BLACK LIST (SE SEI NELLA LISTA NON ENTRI, ALTRIMENTI ENTRI)
+ 
+In questo applicativo, implementeremo un sistema di autorizzazione basato su WHITE LIST. In pratica, per default,  
+ad ogni utente è bloccato l'accesso alle risorse dell'applicazione. In una WHITE LIST specifichiamo cosa se un utente può
+accedere a una risorsa e ciò che può fare oppure non può fare e su quella risorsa. 
+
+L'idea è quella di restringere l'accesso alle operazioni CRUD dei controllers come TicketsController, e ProjectsController. Ogni 
+volta un utente desideri eseguire una di codeste di azioni, deve avere il permesso di farla, cioè essere sulla WHITE LIST. 
+
+---RESTRICTING READ ACCESS TO PROJECTS.---
+
+In ogni sistema di ticket tracking, come Ticketee, arriva sempre il momento in cui si deve decidere quali utenti possono
+VEDERE (READ) quali progetti. Ad esempio potresti trovarti ad operare in una società di consulenza, dove qualche utente sta 
+lavorando su di un certo progetto, e altri utenti stiano lavorando su altri progetti. DESIDERIAMO ALLORA CHE L'AMMINISTRATORE 
+SIA IN GRADO DI IMPOSTARE QUALI PROGETTI OGNI UTENTE PUÒ VEDERE (READ,SHOW). 
+
+---CREAZIONE DEL MODEL PERMISSION---
+
+Come prima cosa bisogna creare una nuova risorsa dell'applicazione, un nuovo oggetto del MODEL che verrà chiamato Permission. 
+In pratica questa classe del model, traccia QUALI UTENTI HANNO QUALI PERMESSI PER QUALI AZIONI.Poichè abbiamo deciso che non
+tutti gli utenti possano vedere (ProjectsController#show) tutti i progetti, alla home page come minimo dobbiamo togliere il link 
+show per i progetti su cui l'utente non ha autorizzazione, mentre abilitatre il link per quelli permessi. Desidero anche inserire 
+un box informativo sull'iter da seguire per essere abilitati al progetto. A questo livello di specifiche non è affatto chiaro 
+come un utente possa guadagnare ovvero richiedere il diritto di comparire sulla WHITE LIST.
+Nel nostro sistema è stato creato un MODEL Permission con la seguente tabella associata: 
+ 
+ id | user_id | thing_id | thing_type | action | created_at | updated_at 
+ ----+---------+----------+------------+--------+------------+------------
+     
+Il MODEL Permission, presenta una bella associazione polimorfica con la risorsa a cui applicare la restrizione.  
+
+ class Permission < ActiveRecord::Base
+         belongs_to :user
+         belongs_to :thing, :polymorphic=>true
+      end 
+
+
+---CREAZIONE DELLA RESTRIZIONE IN LETTURA SUI PROGETTI---
+
+Costruita il nuovo MODEL,basterà eseguire delle restrizioni secondo quanto indicato dalla tabella dei permessi.
+Nel controller ProjectsController, è definito il seguente metodo private:
+
+ def find_project
+          
+        @project = Project.find(params[:id])
+        
+        rescue ActiveRecord::RecordNotFound
+        
+         flash[:alert] = "The project you were looking for could not be found." 
+         redirect_to projects_path 
+ end 
+
+invocato per le azioni show(),edit(),update() e inoltre nell'azione index() si esegue: 
+
+ Project.all 
+ 
+Il problema qui è che non viene dato un ambito di ricerca, UNO SCOPE, ne alla find() 
+(e quindi la find() verrà eseguita sull'intera tabella Project) e neanche in
+index() dove viene utilizzato addirittura Project.all(). 
+
+---RESTRICTING BY SCOPE---
+
+Per eseguire delle restrizioni, come ad esempio delle restrizioni sull'azione show() di ProjectsController,
+dobbiamo implementare uno SCOPE nella classe del model Project. Sostanzialmente questo SCOPE ritorna solo
+i progetti per i quali l'utente corrente ha l'autorizzazion 'view'. Per fare questo ci affidiamo ad un 
+meccanismo DRY di ActiveRecord, e cioè l'utilizzo di ActiveRecord#scope() per creare delle query criteria. 
+
+In pratica al metodo ActiveRecord#scope() passiamo un simbolo che contiene il nome della query-criteria che vogliamo creare
+e anche un criterio Arel ( costruito con where(), limit() ecc.. ) se sono noti a priori tutti i parametri 
+di INPUT necessari alla query-criteria, altrimenti un blocco lambda. Nel nostro caso creiamo il seguente 
+SCOPE (named scope) :
+
+ 
+class Project < ActiveRecord::Base 
+     
+         
+      scope :readable_by, lambda{}  
+     
+end
+
+      

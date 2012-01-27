@@ -9,16 +9,12 @@ Background:
   And there are the following users: 
   | email                  | password |
   | user@ticketee.com      | password |
-  
+  And "user@ticketee.com" can view the "Internet Explorer" project
+  And I am signed in as "user@ticketee.com"
   And I am on the homepage
   When I follow "Internet Explorer"
   And I follow "New Ticket"
-  Then I should see "You need to sign in or sign up before continuing."
-  When I fill in "Email" with "user@ticketee.com" 
-  And I fill in "Password" with "password" 
-  And I press "Login"
-  Then I should see "Create a ticket for project: Internet Explorer"	         
-
+  
 Scenario: Creating a ticket
   When I fill in "Ticket title" with "Non-standards compliance"
   And I fill in "Description" with "My pages are ugly!"
