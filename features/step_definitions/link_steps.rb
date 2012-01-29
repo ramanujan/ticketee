@@ -20,4 +20,10 @@ Then /^I should see "([^"]*)" link$/ do |text|
   page.should have_css("a",:text=>text), "Expected to see #{text.inspect} link, but did not."
 end
 
+Then /^the link "([^"]*)" is disabled$/ do |link_name|
+   
+   page.should_not have_css("a",:text=>link_name), "Expected to not see #{link_name.inspect} link, but did"
+   page.should have_content link_name 
+
+end
 

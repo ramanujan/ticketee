@@ -81,4 +81,12 @@ class Project < ActiveRecord::Base
      
 end
 
-      
+
+| --- BLOCKING ACCESS TO TICKETS --- |      
+Quando s'implementa un sistema di permessi bisogna stare attenti ad assicurare che, tutti gli utenti che devono
+avere accesso ad una certa risorsa la abbiano, ma anche e soprattutto che TUTTI GLI UTENTI CHE NON DEVONO AVERE
+ACCESSO AD UNA RISORSA NON LA ABBIANO!!!
+
+  
+
+

@@ -2,7 +2,7 @@ class ProjectsController < ApplicationController
  
  before_filter :authorize_admin!, :except=>[:show,:index] # In application_controller.rb
  
- before_filter :authenticate_user!, :except=>[:index]# definito da Devise. 
+ before_filter :authenticate_user! # definito da Devise, serve per vedere se l'utente ha eseguito login. 
  
  before_filter :find_project, :only=>[:show,:edit,:update] #Potresti utilizzare anche :except
  
@@ -24,15 +24,9 @@ class ProjectsController < ApplicationController
             
 =end
         
-         if(current_user.admin?) 
-           @project=Project.find(params[:id])
-         else
-           @project = Project.readable_by(current_user).find(params[:id])
-         end   
-         
-         rescue ActiveRecord::RecordNotFound
-        
-         flash[:alert] = "The project you were looking for could not be found." 
+        @project = Project.for(current_user).find(params[:id]) 
+        rescue ActiveRecord::RecordNotFound
+         flash[:alert] = "The project you were loocking for could not be found."
          redirect_to projects_path 
  end
  
@@ -200,6 +194,11 @@ end
          Attenzione: Non si è stabilita nessuna associazione parent-child tra i ticket e gli utenti. 
                      Questo significa che alla cancellazione di un utente, non seguirà la cancellazione
                      dei ticket associati.      
+
+                     Invece tra Project e Ticket esiste tale tipo di associazione. Allora alla
+                     cancellazione di un Porject anche con Project.destroy() seuirà la cancellazione
+                     dei tickets associati.   
+
 =end
 def destroy
      

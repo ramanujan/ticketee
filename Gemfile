@@ -47,8 +47,8 @@ group :test do
   gem 'cucumber-rails'
   gem 'capybara'
   gem 'spork', '0.9.0.rc9'
-  gem 'database_cleaner'
   gem 'factory_girl' 
+  gem 'database_cleaner'
   gem 'email_spec' # mi serve a testare il modulo confirmable di devise.   
 end
 

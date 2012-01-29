@@ -16,6 +16,10 @@ Spork.prefork do
  Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 
  RSpec.configure do |config|
+  
+  
+  
+  
   # == Mock Framework
   #
   # If you prefer to use mocha, flexmock or RR, uncomment the appropriate line:
@@ -33,6 +37,7 @@ Spork.prefork do
   # examples within a transaction, remove the following line or assign false
   # instead of true.
    config.use_transactional_fixtures = true
+   
 
   # If true, the base class of anonymous controllers will be inferred
   # automatically. This will be the default behavior in future versions of
@@ -43,6 +48,6 @@ end
 
 Spork.each_run do
   # This code will be run each time you run your specs.
-
+ 
 end
 

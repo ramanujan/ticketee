@@ -10,6 +10,14 @@ class Project < ActiveRecord::Base
 
    has_many :permissions, :as=>:thing 
    
-   scope :readable_by, lambda{ |user| joins(:permissions).where(:permissions=>{:action=>"view",:user_id=>user.id})}  
+   scope :readable_by, lambda{ |user| joins(:permissions).
+                                      where(:permissions=>{:action=>"view",:user_id=>user.id})}  
 
-end
+   def self.for(user)
+     
+     user.admin? ?  Project : Project.readable_by(user)
+        
+   end   
+   
+end 
+

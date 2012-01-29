@@ -1,11 +1,35 @@
 =begin
+   
+    Get,Post, Put, Delete, Anithing
+    
+    Possiamo definire routes che rispondono solo ai verbi HTTP GET,POST,PUT,DELETE con gli omonimi metodi 
+    di Rails get,post,put,delete. Tutti questi metodi utilizzano la stessa sintassi, e lavorano in maniera
+    molto simile, me definiscono routes che rispondono solo a determinati verbi. Se non importa a quali verbi
+    dobbiamo rispondere e cioè rispondiamo con la stessa azione a tutti i verbi, dobbiamo utilizzare il 
+    match(). 
+    
+     match "some/route", :to=>"some#controller_action"
+    
+    Questo route risponde a tutti i verbi: GET,POST,PUT,DELETE . Se desideriamo, possiamo utilizzare match() in maniera 
+    equivalente a post(), put(), get() e delete():doc:
+    
+     match "some/route", :to=>"some#controller_action", :conditions=>{:method=>:get}    
+       
+    Ricordiamo poi che ad esempio queste linee equivalgono:
+    
+    get "pages/jquery" <===> get 'pages/jquery, :to=>"pages#jquery",:as=>"pages_jquery" 
+     
+    get "pages/jquery" <===> get 'pages/jquery, => "pages#jquery" 
+    
+    get "pages/jquery" <===> match "pages/jquery", :to=>"pages#jquery", :conditions=>{:method=>:get}
+    
+    
       
        
 =end
 
 Ticketee::Application.routes.draw do
   
-  # get "users/index"
    get "pages/jquery" => "pages#demo_jquery"
    
    get "pages/home" 
@@ -18,11 +42,14 @@ Ticketee::Application.routes.draw do
 
    get "payments/checkout"
     
+   devise_for :users, :controllers=>{:registrations=>'registrations'} #vedi registrations_controller.rb 
     
-
-  devise_for :users
+   get 'awaiting_confirmation',:to=>"users#confirmation",:as=>"confirm_user" # Utilizzato in RegistrationController#after.. (confirm_user_path)
+   
+   
+   
   
-  root :to => 'projects#index'
+   root :to => 'projects#index'
  
   resources :projects do
     resources :tickets

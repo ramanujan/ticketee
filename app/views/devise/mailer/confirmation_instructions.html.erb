@@ -1,5 +1,15 @@
-<p>Welcome <%= @resource.email %>!</p>
+<!-- Modified by Domenico -->
+<div class="block">
 
-<p>You can confirm your account through the link below:</p>
+   <div id="form" class="column span-23 last">
+	    
+	    <h2 class="alt form_title">Welcome <%= @resource.email %>!</h2>
+	    <p>You can confirm your account through the link below:</p>
+        <p><%= link_to 'Confirm my account', confirmation_url(@resource, :confirmation_token => @resource.confirmation_token) %></p>
 
-<p><%= link_to 'Confirm my account', confirmation_url(@resource, :confirmation_token => @resource.confirmation_token) %></p>
+	</div>
+
+</div>
+
+
+

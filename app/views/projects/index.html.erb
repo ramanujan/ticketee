@@ -15,18 +15,21 @@
                
                <%unless @projects.empty?%>  
                                <%@projects.each do |project| %>
-                                      <div class="project_image">
-                     	                 <%=linked_image_tag(:image_name=>"project_piccolo.png",:linked_to=>project)%> 
-                                      </div>                 
-                         
-                                     <div class="project_name_field">
-                     	                 <%=link_to project.name, project%> 
-                                     </div>     
+                                      
+                                             <div class="project_image">
+                     	                        <%=linked_image_tag(:image_name=>"project_piccolo.png",:linked_to=>project)%> 
+                                             </div>                 
+                                             
+                                             <div class="project_name_field">
+                     	                         <%=link_to project.name, project%> 
+                                             </div>     
                                      
-                                     <%=linked_image_tag(:image_name=>"right_arrow_small.png",:linked_to=>project)%>            
+                                             <%=linked_image_tag(:image_name=>"right_arrow_small.png",:linked_to=>project)%>            
+                                    
                                      
-                                     <hr class="gray_bottom_border"/>  
-                               <%end%>
+                                             <hr class="gray_bottom_border"/>  
+                             
+                             <%end%>
                
                <%end%>         
              
