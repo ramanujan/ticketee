@@ -111,19 +111,6 @@ require 'spec_helper'
 
 describe ProjectsController do
        
-      #_________________________________________________________________________
-        
-        @instance_user = Factory(:user, :email=>"domenico@lives.it",
-                                        :password=>"cravatta",
-                                        :password_confirmation=>"cravatta") 
-        
-        p "INSIDE describe() DEBUGGING self : #{self} "
-        p "INSIDE describe() DEBUGGING self.class : #{self.class} "
-        p "INSIDE describe() DEBUGGING @instance_user : #{@instance_user} "
-      
-      #________________________________________________________________________
-         
-      
         let(:user) do
            create_user! 
         end
@@ -133,99 +120,74 @@ describe ProjectsController do
         end
        
        
-       context " standard (signed in ) users " do
-      
-      #_____________________________________________________________________
-      
-       @instance_user = Factory(:user, :email=>"domenicopeg@livesgo.it",
-                                        :password=>"cravatta",
-                                        :password_confirmation=>"cravatta") 
+       context "not signed in users" do
        
-      
-      
-        p "INSIDE context() DEBUGGING self : #{self} "
-        p "INSIDE context() DEBUGGING self.class : #{self.class} "
-        p "INSIDE context() DEBUGGING @instance_user : #{@instance_user} "
+               it "cannot access any actions before login " do
+                    get :index 
+                    response.should redirect_to "/users/sign_in"
           
-      #_________________________________________________________________________   
-        
+                   { 
+                    :new=>"get",
+                    :create=>"post",
+                    :edit=>"get",
+                    :update=>"put",
+                    :show=>"get",
+                    :destroy=>"delete"
+                   }.each do |action,http_method| 
+                   
+                      send(http_method,action,:id=>project.id) 
+                      response.should redirect_to "/users/sign_in"           
+                   end  
+         
+              end
+       
+      end
+       
+       
+      context " standard (signed in ) users " do
        
          before(:each) do
-           
-           @instance_user = Factory(:user, :email=>"dome@livesgooo.it",
-                                        :password=>"cravatta",
-                                        :password_confirmation=>"cravatta") 
-       
-         end 
+            
+             sign_in(:user,user)
+         
+         end
           
-          it "displays an error for a missing project" do
+          it "displays an error for a missing project" do    
                
-               p "INSIDE it() DEBUGGING self : #{self} "
-               p "INSIDE it() DEBUGGING self.class : #{self.class} "
-               p "INSIDE it() DEBUGGING @instance_user : #{@instance_user} "
-
-=begin
-         Dagli output esaminati, si vede che RSpec con describe(), context(), it() crea diverce istanze di Class e quindi 
-         gli ambienti sono diversi. In particolare stai attento alle variabile d'istanza. 
-         
-         Per questo motivo se desideri condividere dentro it() una certa istanza di User devi utilizzare: 
-         
-         before(:each)
-         
-         before(:all)
-          
-         In particolare si noti che: 
-         
-          before(:each) do
-           
-             @instance_user = Factory(:user, :email=>"dome@livesgooo.it",
-                                        :password=>"cravatta",
-                                        :password_confirmation=>"cravatta") 
-       
-           end  
-         
-          che viene eseguito per ogni it() non da problemi di duplicazione della email, come se al 
-          passaggio da una it e l'altra l'utente creato venga eliminato dal database di test. 
-
-=end
-               
-               sign_in(:user,user)      
                get :show, :id=>"not-here"
                response.should redirect_to(projects_path)
-               message="The project you were loocking for could not be found."
+               message="The project you were looking for could not be found."
                flash[:alert].should eql(message) 
             end
+          
+          it "cannot access the show action" do
+            
+               get :show, :id=>project.id
+               response.should redirect_to(projects_path)
+               message="The project you were looking for could not be found."
+               flash[:alert].should eql(message) 
+            
+          end
+          
+           it "cannot access any of these actions " do
+                
+               { 
+                    :new=>"get",
+                    :create=>"post",
+                    :edit=>"get",
+                    :update=>"put",
+                    :destroy=>"delete"
+                   }.each do |action,http_method| 
+                   
+                      send(http_method,action,:id=>project.id) 
+                      response.should redirect_to root_path           
+                   end  
+                
+                
+           end
              
-            it "cannot access the new,create,edit,update,destroy actions" do
-               
-               p "INSIDE it(..) DEBUGGING self : #{self} "
-               p "INSIDE it(..) DEBUGGING self.class : #{self.class} "
-               p "INSIDE it(..) DEBUGGING @instance_user : #{@instance_user} "
-               
-                  sign_in(:user,user) 
-                  {
-                  :new=>"get",
-                  :create=>"post",
-                  :edit=>"get",
-                  :update=>"put",
-                  :destroy=>"delete"
-                 }.each do |action,http_method|
-                        
-                        send(http_method,action,:id=>project.id) # send viene utilizzato così: send(nome_metodo,argomenti) 
-                        response.should redirect_to root_path
-                        flash[:alert].should eql("You must be an admin to do that.")
-                 end 
-              
-             end
-       
-           it "cannot access the show action" do
-               sign_in(:user,user) 
-               get :show,:id=>project.id
-               response.should redirect_to projects_path 
-               flash[:alert].should eql("The project you were loocking for could not be found.") 
-          end   
-         
-       
-       end
-       
-end
+    end
+
+
+end   
+

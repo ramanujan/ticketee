@@ -1,10 +1,25 @@
 class ProjectsController < ApplicationController
  
+=begin 
+
+   Tutte le azioni (meno che show e index) possono essere accedute se e solo se l'utente è un admin.
+   Se l'utente non è admin queste azioni sono bloccate e l'utente è rediretto a root_path con il
+   messaggio d'errore. 
+   
+=end 
+
  before_filter :authorize_admin!, :except=>[:show,:index] # In application_controller.rb
  
- before_filter :authenticate_user! # definito da Devise, serve per vedere se l'utente ha eseguito login. 
+=begin
+       Per due azioni ( show(), index() ) non è richiesto di essere admin ma di essere loggati 
+       Se per caso l'utente non è loggato e richiede una di queste azioni deve essere rediretto verso
+       pagina di login. 
+=end 
  
- before_filter :find_project, :only=>[:show,:edit,:update] #Potresti utilizzare anche :except
+ before_filter :authenticate_user!,:only=>[:index,:show] # definito da Devise, serve per vedere se l'utente ha eseguito login. 
+ 
+ 
+ before_filter :find_project, :only=>[:show,:edit,:update,:destroy] #Potresti utilizzare anche :except
  
  def find_project
           
@@ -23,10 +38,9 @@ class ProjectsController < ApplicationController
         
             
 =end
-        
         @project = Project.for(current_user).find(params[:id]) 
         rescue ActiveRecord::RecordNotFound
-         flash[:alert] = "The project you were loocking for could not be found."
+         flash[:alert] = "The project you were looking for could not be found."
          redirect_to projects_path 
  end
  
@@ -35,7 +49,7 @@ class ProjectsController < ApplicationController
 
  def index
       
-      @projects = Project.all
+      @projects = Project.for(current_user).all
       @title="Home - "   
    
  end
@@ -202,7 +216,7 @@ end
 =end
 def destroy
      
-     @project = Project.destroy(params[:id])
+     @project.destroy
      
      flash[:notice]="Project has been deleted."
      

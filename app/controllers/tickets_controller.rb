@@ -23,21 +23,32 @@ class TicketsController < ApplicationController
      # di mostrare la pagina di sign-in con un messaggio flash. Questo implica che Devise 
      # redirezione ad un'altro controller l'azione corrente.  
     
-    before_filter :authenticate_user!, :except=>[:index,:show]
-    before_filter :find_project, :only=>[:new,:create,:show,:edit,:update,:destroy]
+    before_filter :authenticate_user!
+    
+    before_filter :find_project, :except=>[:index] #index() non esiste.
+    
     before_filter :find_ticket, :only=>[:show,:edit,:update,:destroy]
     
+    before_filter :authorize_create!, :only=>[:new,:create]
+
+    before_filter :authorize_update!, :only=>[:edit,:update]
+    
+    before_filter :authorize_delete!, :only=>[:destroy]
     
     def find_project  
       
-        @project = Project.find(params[:project_id])
+        @project = Project.for(current_user).find(params[:project_id])
         
         rescue ActiveRecord::RecordNotFound
         
         flash[:alert] = "The project you were looking for could not be found." 
-        redirect_to projects_path 
+        redirect_to root_path 
+    
     end
      
+    
+    
+    
     
     
     def find_ticket
@@ -49,7 +60,51 @@ class TicketsController < ApplicationController
     end 
    
     
-    private :find_project, :find_ticket
+    
+    
+    
+    def authorize_create!
+       
+       
+         if !current_user.admin? && cannot?("create tickets".to_sym,@project)
+           
+           flash[:alert]="You cannot create tickets on this project."
+           redirect_to @project
+         
+         end
+         
+    end
+    
+    def authorize_update!
+       
+       
+         if !current_user.admin? && cannot?("update tickets".to_sym,@project)
+           flash[:alert]="You cannot edit/update tickets on this project."
+           redirect_to @project
+         
+         end
+         
+    end
+    
+    
+    def authorize_delete!
+       
+       
+         if !current_user.admin? && cannot?("delete tickets".to_sym,@project)
+           flash[:alert]="You cannot delete tickets on this project."
+           redirect_to @project
+         end
+         
+    end
+    
+    
+    
+    
+    private :find_project,
+            :find_ticket,
+            :authorize_create!,
+            :authorize_update!,
+            :authorize_delete!
    
   
   

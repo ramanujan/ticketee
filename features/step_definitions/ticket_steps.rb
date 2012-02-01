@@ -32,3 +32,30 @@ Then /^I should see "([^"]*)" within "([^"]*)"$/ do |arg1, arg2|
   end
 
 end
+
+
+=begin
+    
+    Si noti che il seguente step: 
+           
+           Given /^"([^"]*)" can create tickets in the "([^"]*)" project$/ do |user_email, project_name|
+                     Permission.create! :user  => User.find_by_email(user_email),
+                     :thing => Project.find_by_name(project_name),
+                     :action =>"create tickets"   
+            end
+
+    è simile allo step definito in project_steps:
+    
+          Given /^"([^"]*)" can view the "([^"]*)" project$/ do |user_email, project_name|
+           
+                      Permission.create! :user  => User.find_by_email(user_email),
+                      :thing => Project.find_by_name(project_name),
+                      :action =>"view"   
+    
+    Allora invece di scrivere questo step qui, siamo DRY e andiamo a scrivere un nuovo insieme di 
+    steps che chiameremo permission_steps. (si veda permission_steps.rb)
+             
+=end
+
+
+

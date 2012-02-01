@@ -17,8 +17,8 @@ Background:
   | user2@ticketee.com | password |
   And There is a project called "TextMate 2"
   And There is a project called "Internet Explorer"
-  And "user1@ticketee.com" can view the "TextMate 2" project 
- 
+  And "user1@ticketee.com" can view the "TextMate 2" project
+	 
 
 Scenario: Listing only all projects available to users
  And I am signed in as "user1@ticketee.com"

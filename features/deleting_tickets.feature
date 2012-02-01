@@ -12,7 +12,7 @@ Background:
   And I am signed in as "user@ticketee.com" 
   Given There is a project called "TextMate 2"
   And "user@ticketee.com" can view the "TextMate 2" project
-  
+  And "user@ticketee.com" can delete tickets on the "TextMate 2" project
   And "user@ticketee.com" has created a ticket for this project:
   | title         | description                 |	
   |Make it shiny! |Gradients! Starbursts! Oh my!|

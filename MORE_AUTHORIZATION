@@ -83,10 +83,185 @@ end
 
 
 | --- BLOCKING ACCESS TO TICKETS --- |      
+
 Quando s'implementa un sistema di permessi bisogna stare attenti ad assicurare che, tutti gli utenti che devono
 avere accesso ad una certa risorsa la abbiano, ma anche e soprattutto che TUTTI GLI UTENTI CHE NON DEVONO AVERE
 ACCESSO AD UNA RISORSA NON LA ABBIANO!!!
-
+ 
+ --- RESTRICTING WRITE ACCESS ---
+ 
+A volte mentre si lavora ad un progetto, si desidera di limitare la creazione dei tickets sul progetto, 
+solo a determinate persone come ad esempio agli sviluppatori oppure ai clienti. Per questo motivo
+si desidera che il link New, sia nascosto alle persone che non hanno questo permesso. 
+ 
+ __CanCan__
+ 
+ CanCan è una gem scritta da Ryan Bates. Fornisce qualche helper simpatico, incluso negli oggetti istanziati per generare
+ le views e nei controllori. Questi helper sono ad esempio i metodi cannot? e can?  che possiamo utilizzare
+ per garantire specifici permessi sulle nostre risorse. Guarda caso, can? e cannot? utilizzano la stessa
+ tabella permissions per controllare che gli utenti abbiano gli adeguati permessi per eseguire le varie operazioni.
+ 
+ Come prima cosa, CanCan è stato utilizzato nel controller TicketsController. In particolare, abbiamo aggiunto
+ 
+ class TicketsController < ActiveRecord 
+ 
+ ..
+ 
+ before_filter :authorize_create!, :only=>[:new,:create]
+ 
+  def authorize_create!
+         
+         if !current_user.admin? && cannot?("create tickets",@project)
+           
+           flash[:alert]="You cannot create tickets on this project."
+           
+           redirect_to @project
+         
+         end
+         
+    end
+ 
+ 
+ end 
+ 
+ 
   
+Si noti come, in particolare nel caso che l'utente loggato non sia un amministratore del sistema, 
+si controlli con cannot? che l'utente abbia il permesso "create tickets" sulla risorsa @project. 
+
+... cannot?("create tickets",@project) .... 
+  
+
+cannot? riceve quindi come parametri "create tickets" e @project e 
+
+utilizza un metodo built-in di CanCan che esegue la seguente linea:
+
+@current_ability ||=::Ability.new(current_user) 
+
+Quindi nel ROOT-NAMESPACE dobbiamo creare una classe Ability che utilizzerà l'utente corrente e 
+la tabella dei permessi per ritornare un oggetto che serve a cannot?, can? per vedere se si 
+hanno i giusti permessi. 
+
+In quanto client code di CanCan siamo interessati solo a come 
+istanziare Ability. Alla prima invocazione di cannot? oppure di can? dobbiamo quindi
+istanziare Ability che dovrà mantenere delle informazioni sui permessi 
+dell'utente, e cioè su quello che può fare e su cosa non può fare.
+ 
+Sostanzialmente è una classe del MODEL ma non è una classe ActiveRecord non è una classe 
+che modella un quanche oggetto persistente. La potremmo chiamare una classe d'utilità. 
+
+1) Ability è dove i permessi dell'utente sono definiti tramite il metodo can()
+
+2) can? cannot? si limitano ad analizzare l'istanza di Ability per questo utente. 
+
+
+In generale Ability si utilizza così: 
+
+class Ability
+  
+  include CanCan::Ability
+  
+  def initialize(user)
+   
+    user ||= User.new     # guest user (not logged in)
+    
+    if user.admin?
+      can :manage, :all     # user can perform any action  on any object 
+    else
+      can :read, :all      # user can perform read action on any object
+  
+  end
+
+end
+
+Cioè:  
+
+1) si passa al costruttore l'istanza su cui si desidera applicare le restrizioni
+2) Si decide quali permessi ha e su quali risorse. 
+
+ritorna l'istanza di Ability su cui lavorano can? e cannot?. Sostanzialmente can? e cannot? chiedono ad 
+All'istanza di Ability @current_ability se il determinato utente ha il premesso passato (create_tickets) sulla
+risorsa. Per fare ciò utilizzano un qualche metodo dell'istanza passandogli "create_tickets" @project, e cioè nome azione e istanza della risorsa. 
+
+L'istanza di Ability, @current_ability  ha una rappresentazione di cosa può fare l'utente corrente tipo 
+
+  |action|risorsa| 
+
+consulta questa rappresentazione e risponde si oppure no. 
+
+La rappresentazione va costruira con il metodo can(). In generale faremo cose del genere:
+
+can :read, Project, :active => true, :user_id => user.id # user can read active projects whic he owns. 
+                                                         # :active, :user_id si riferiscono a metodi di Project.
+
+e cioè diciamo a can che l'utente in questione ha permesso di lettura su istanze di Project @project su cui @project.user_id 
+ritorna user.id e @project.active ritorna true. 
+ 
+ | Action           | Resource    | Conditions               |
+ | Nome azione      | Class object| {:method_name => :value} |
+ | "create tickets" | Project     |                          |
+
+ però come si vede in questo esempio le azioni le possiamo chiamare come ci pare. 
+
+Nella nostra applicazione abbiamo utilizzato permissions per inizializzare Ability, e abbiamo passato a can() un
+blocco di codice che potrà tornare true o false impostando i relativi permessi. 
+
+class Ability
+  
+   include CanCan::Ability
+   
+   def initialize(user)
+
+       user.permissions.each do |permission|
+             
+              can permission.action.to_sym, permission.thing_type.constantize do |thing|
+                  
+                  thing.nil? || permission.thing_id.nil? || permission.thing_id == thing.id
+              
+              end
+       end
+    end
+end
+
+A cosa serve String#constantize() ?? è un metodo (ActiveSuport) che prova a cercare la costante dichiarata dalla stringa. 
+Può lanciare un'eccezione nel caso la costante rappresentata dalla stringa non esista. L'eccezione è 
+NameError. Si tratta della MONKEY PATCH su String eseguita dall'inclusione di ActiveSupport::Inflector
+nella classe String. 
+
+"Class".constantize ==> Ritorna l'oggetto Class
+
+Quindi can() prende come parametri :
+
+1) Il nome del permesso (ad esempio "create tickets" e lo prende SIMBOLIZZATO 
+   (ad esempio "create tickets".to_sym ==> :create_tickets 
+
+2) La classe della risorsa sulla quale è applicata il permesso
+
+3) Un blocco di codice   	
+   
+
+ 
+
+   
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+
+
+
+
 
 
