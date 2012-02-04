@@ -26,11 +26,14 @@
                
            <%end%>
                  
-                 
-            <div id="project_add_ticket" class="sequential">
-                     <%=link_to "New Ticket",new_project_ticket_path(@project),:class=>"command_button"%>
-             </div>
-             
+          <%=authorized? "create tickets".to_sym,@project do %>       
+          
+                 <div id="project_add_ticket" class="sequential">
+                         <%=link_to "New Ticket",new_project_ticket_path(@project),:class=>"command_button"%>
+                 </div>
+          
+          <%end%>   
+          
              <hr class="space"/>
              <hr />	
                     

@@ -17,6 +17,13 @@
 	text-decoration:none;
  }
 
+/* Disable alternating colors table Blueprint */ 
+
+table tr:nth-child(even) td {
+  background: transparent;
+}
+
+
  /* rounded corners, utilizzato da i riquadri di project show e ticket show. */ 
 
 .rounded{
@@ -727,8 +734,10 @@ a div:hover{
 
 
 
-
-
+#permissions{
+	
+	
+}
 
 
 

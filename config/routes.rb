@@ -1,6 +1,6 @@
 =begin
    
-    Get,Post, Put, Delete, Anithing
+    Get,Post, Put, Delete, Anything
     
     Possiamo definire routes che rispondono solo ai verbi HTTP GET,POST,PUT,DELETE con gli omonimi metodi 
     di Rails get,post,put,delete. Tutti questi metodi utilizzano la stessa sintassi, e lavorano in maniera
@@ -32,8 +32,23 @@ Ticketee::Application.routes.draw do
   
    get "pages/jquery" => "pages#demo_jquery"
    
+   
    get "pages/home" 
    
+   get "pages/demo_form_1" 
+   
+   get "pages/demo_form_2"
+   
+   get "pages/demo_form_2/search",:to =>"pages#search",:as=>"search" 
+    
+   get "pages/demo_form_3"
+    
+   get "pages/demo_form_4"
+   
+   put "pages/permissions_update", :as=>"pages_permissions_update"
+
+
+
    get "payments/index"
 
    get "payments/confirm"
@@ -42,6 +57,8 @@ Ticketee::Application.routes.draw do
 
    get "payments/checkout"
     
+   get "pages/demo_form_1" 
+    
    devise_for :users, :controllers=>{:registrations=>'registrations'} #vedi registrations_controller.rb 
     
    get 'awaiting_confirmation',:to=>"users#confirmation",:as=>"confirm_user" # Utilizzato in RegistrationController#after.. (confirm_user_path)
@@ -49,7 +66,7 @@ Ticketee::Application.routes.draw do
    
    
   
-   root :to => 'projects#index'
+  root :to => 'projects#index'
  
   resources :projects do
     resources :tickets
@@ -57,8 +74,30 @@ Ticketee::Application.routes.draw do
 
    namespace :admin do
          root :to=>"base#index" # Si riferisce a Admin::BaseController.index 
-         resources :users
+         resources :users do
+           resources :permissions
+         end
+      
       end 
+
+   put 'admin/users/:user_id/permissions', 
+       :to => 'admin/permissions#update',
+       :as => :update_user_permissions
+    
+    
+    
+    
+    
+
+=begin
+    admin_user_permissions GET    /admin/users/:user_id/permissions(.:format)          {:action=>"index", :controller=>"admin/permissions"}
+                           POST   /admin/users/:user_id/permissions(.:format)          {:action=>"create", :controller=>"admin/permissions"}
+ new_admin_user_permission GET    /admin/users/:user_id/permissions/new(.:format)      {:action=>"new", :controller=>"admin/permissions"}
+edit_admin_user_permission GET    /admin/users/:user_id/permissions/:id/edit(.:format) {:action=>"edit", :controller=>"admin/permissions"}
+     admin_user_permission GET    /admin/users/:user_id/permissions/:id(.:format)      {:action=>"show", :controller=>"admin/permissions"}
+                           PUT    /admin/users/:user_id/permissions/:id(.:format)      {:action=>"update", :controller=>"admin/permissions"}
+                           DELETE /admin/users/:user_id/permissions/:id(.:format)      {:action=>"destroy", :controller=>"admin/permissions"} 
+=end
 
 
 

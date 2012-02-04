@@ -6,21 +6,28 @@
                  <h2 class="alt"><%=@ticket.title%></h2>
             </div>
                 
-            <div id="ticket_edit" class="sequential">
-                 <%=link_to "Edit Ticket",
-                             edit_project_ticket_path(@project,@ticket), #Eventualmente potevi passare [:edit,@project,@ticket]
-                             :class=>"command_button"%>
-            </div>	
+            
+            <%=authorized? "edit tickets".to_sym,@project do %>   
+            
+                <div id="ticket_edit" class="sequential">
+                      <%=link_to "Edit Ticket",
+                                  edit_project_ticket_path(@project,@ticket), #Eventualmente potevi passare [:edit,@project,@ticket]
+                                 :class=>"command_button"%>
+                </div>	
+            
+            <%end%>
                  
-            <div id="ticket_delete" class="sequential">
+            <%=authorized? "delete tickets".to_sym,@project do %>        
+               <div id="ticket_delete" class="sequential">
                  
-                 <%=link_to "Delete Ticket",
-                             project_ticket_path(@project,@ticket),
-                             :method=>"delete",
-                             :confirm=>"Are you sure to delete ticket '#{@ticket.title}' associatedo to project '#{@project.name}' ?",
-                             :class=>"command_button"%>
-            </div>	 
+                    <%=link_to "Delete Ticket",
+                                project_ticket_path(@project,@ticket),
+                                :method=>"delete",
+                                :confirm=>"Are you sure to delete ticket '#{@ticket.title}' associatedo to project '#{@project.name}' ?",
+                                :class=>"command_button"%>
+               </div>	 
           
+          <%end%>
        
        
        <hr class="space"/>

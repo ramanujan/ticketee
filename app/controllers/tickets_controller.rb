@@ -78,7 +78,7 @@ class TicketsController < ApplicationController
     def authorize_update!
        
        
-         if !current_user.admin? && cannot?("update tickets".to_sym,@project)
+         if !current_user.admin? && cannot?("edit tickets".to_sym,@project)
            flash[:alert]="You cannot edit/update tickets on this project."
            redirect_to @project
          

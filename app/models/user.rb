@@ -86,7 +86,7 @@
 class User < ActiveRecord::Base
    
   has_many :tickets
-  has_many :permissions
+  has_many :permissions, :dependent=>:delete_all
   
    
   # Include default devise modules. Others available are:

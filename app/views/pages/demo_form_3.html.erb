@@ -1,0 +1,40 @@
+<div class="block">
+
+   <div id="form" class="column span-16">
+	    
+	    <h2 class="alt form_title">Demo form 3</h2>
+	    
+	    <div>
+	  	     <%= form_tag search_path(:variabile=>"Wibble111"), :method=>:get do %>
+	  	            <div>
+	  	              <%=label_tag("ticket[title]","Ticket title:")%>
+	  	            </div>
+	  	            
+	  	            <div>
+	  	              <%=text_field_tag("ticket[title]")%>
+	  	            </div> 
+	  	           
+	  	             <div>
+	  	              <%=label_tag("ticket[description]","Ticket description:")%>
+	  	            </div>
+	  	            
+	  	            <div>
+	  	              <%=text_field_tag("ticket[description]")%>
+	  	            </div> 
+	  	           
+	  	           
+       	       	                                               
+	  	            <%= submit_tag("Search") %>
+	  	     <%end%>
+        
+             <%=link_to "Search", search_path(:variabile=>"Wibble111")%> 
+             <%=link_to "Risorsa composta", [:pages,:demo_form_4]%>
+        </div>
+	
+    </div>
+
+  <div class="debug column span-4 box">
+         <%=render "layouts/debug"%>  
+  </div> 
+
+</div>

@@ -1,0 +1,58 @@
+<!-- 
+	 Dal controller arriva una struttura del genere: 
+	 
+	 {\"Adamo I\"=>{\"view\"=>\"true\", \"create tickets\"=>\"false\"}, 
+	  \"Posillipo\"=>{\"view\"=>\"false\", \"create tickets\"=>\"false\"}, 
+	  \"Calendar Man\"=>{\"view\"=>\"true\", \"create tickets\"=>\"false\"}, 
+	  \"XXXXXXXXXXXXXXXXXXXXXXXXXXXXX\"=>{\"view\"=>\"false\", \"create tickets\"=>\"false\"}}"
+-->
+
+<div class="block">
+
+   <div id="form" class="column span-16">
+	    
+	    <h2 class="alt form_title">Demo form 4</h2>
+        <div>
+            <%=form_tag pages_permissions_update_path,:method=>:put do %>
+                                <table>
+   	                                  <thead>
+   	   	                                   <th>Project</th>
+   	   	                                   <th>View</th>
+   	   	                                   <th>Create Tickets</th>
+   	                                  </thead>
+       
+                                      <tbody>
+       	                                 
+       	                                 <%@permissions.each do |project_name,actions_hash|%>
+       	                                        <tr class='<%=cycle("odd","even") %>'>
+       	       	                                        <td><%=project_name%></td>
+       	       	                                         
+       	       	                                          <%actions_hash.each do |perm,value|%>
+       	       	                                         
+       	       	                                                     <td>
+       	       	                                                        <%=check_box_tag "permissions[#{project_name}][#{perm}]",
+       	       	                                                                         "1",
+       	       	                                                                         value
+                                                                         %> 
+       	       	                                                      </td> 
+       	       	                                          
+       	       	                                                    
+       	       	                                          <%end%>
+       	       	                      
+       	       	                       
+       	                                     </tr>
+       	                             <%end%>                    
+       	                           
+       	                       </tbody> 
+   
+      </table>
+
+      <%=submit_tag "Update"%> 
+
+   <%end%>
+ </div>
+</div>
+
+
+
+</div>

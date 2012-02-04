@@ -19,7 +19,7 @@
 		 
 		    <%if user_signed_in? %>   
              
-               <%=link_to "#" do %>
+               <%=link_to(destroy_user_session_path,:method=>:delete) do %>
                  <div class="button column span-2 ">Logout</div>
 	           <%end%>
 	         

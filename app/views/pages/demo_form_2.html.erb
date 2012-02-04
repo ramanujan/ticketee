@@ -1,0 +1,26 @@
+<div class="block">
+
+   <div id="form" class="column span-16">
+	    
+	    <h2 class="alt form_title">Demo form 2</h2>
+	    
+	    <div>
+	  	     <%= form_tag search_path(:variabile=>"Wibble111"), :method=>:get do %>
+	  	            <%=label_tag(:q, "Search for:")%>
+	  	            <%=text_field_tag(:q)%>
+	  	            <%=check_box_tag "chkbx","1",true %>
+       	       	                                               
+	  	            <%= submit_tag("Search") %>
+	  	     <%end%>
+        
+             <%=link_to "Search", search_path(:variabile=>"Wibble111")%> 
+        
+        </div>
+	
+    </div>
+
+  <div class="debug column span-4 box">
+         <%=render "layouts/debug"%>  
+  </div> 
+
+</div>

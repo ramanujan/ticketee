@@ -1,0 +1,41 @@
+<%=form_tag update_user_permissions_path, :method=>:put do %>
+
+   <table id="permissions">
+   	   <thead>
+   	   	     <th>Project</th>
+   	   	     <%permissions.each do |name,value| %>
+   	   	        <th><%=value%></th>
+   	   	     <%end%>
+   	   </thead>
+       
+       <tbody>
+       	       <%@projects.each do |project|%>
+       	             <tr>
+       	       	                 <td><%=project.name%></td>
+       	       	                 <%permissions.each do |name,value|%>
+       	       	                      <td>
+       	       	                              
+       	       	                              <!--Il primo parametro imposta gli attributi name e id. Il secondo parametro l'attributo value 
+       	       	                              	  che è il valore passato quando la check box is checked. -->
+       	       	                              
+       	       	                             <%=check_box_tag "permissions[#{project.id}][#{name}]",
+       	       	                                               "1",
+       	       	                                               @ability.can?(name.to_sym,project) # per l'attributi checked, checked="checked", se true
+       	       	                                              
+       	       	                             %> 
+       	       	                    
+       	       	                     </td> 
+       	       	       
+       	       	                 <%end%>
+       	            </tr>
+       	      <%end%>                    
+       	
+       </tbody> 
+   
+   </table>
+   
+   <div>
+     <%=submit_tag "Update",:class=>"formButton" %> 
+   </div> 
+
+<%end%>

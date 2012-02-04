@@ -44,6 +44,13 @@ module ApplicationHelper
     nil
   end   
 
+  
+  def authorized?(action,resource,&block)
+    
+      block.call if can?(action.to_sym,resource) || current_user.try(:admin?)
+      nil
+  end
+
 
 
 end

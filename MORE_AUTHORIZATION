@@ -240,7 +240,15 @@ Quindi can() prende come parametri :
 3) Un blocco di codice   	
    
 
+ ASSIGNING PERMISSIONS
  
+ Nella nostra applicazione abbiamo aggiunto a User un campo, un attributi fisico, che abbiamo chiamato admin. 
+ Quindi abbiamo permesso all'amministratore tramite un backend di creare utenti amministratori. In pratica 
+ questo lo si è fatto utilizzando una checkbox. 
+ 
+ Adesso vogliamo permettere agli amministratori di poter creare delle autorizzazioni sui tickets. In pratica
+ dall'interfaccia di amministrazione vogliamo arrivare alla gestione dell'utente, dove tra le varie info e 
+ i pulsanti Edit User, Delete User, andreamo ad aggiungere un pulsante Permission.  
 
    
    
