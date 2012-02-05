@@ -1,10 +1,8 @@
 Feature: Creating tickets
-
- Affinchè si possano assegnare tickets ai progetti
- Come un utente autenticato dell'applicazione
- Voglio poter selezionare un progetto e creare il nuovo ticket. 
- Ogni utente autenticato può creare un ticket solo su progetti su cui ha il permesso di farlo.
- 
+  Affinchè si possano assegnare tickets ai progetti
+  Come un utente autenticato dell'applicazione
+  Voglio poter selezionare un progetto e creare il nuovo ticket. 
+  Ogni utente autenticato può creare un ticket solo su progetti su cui ha il permesso di farlo.
 
 Background:
   Given There is a project called "Internet Explorer"
@@ -26,21 +24,29 @@ Scenario: Creating a ticket
   Then I should see "Ticket has been created."
  
 Scenario: Creating a ticket without an empty attribute
-   And I press "Create Ticket"
-   Then I should see "Ticket has not been created."
-   And I should see "Title can't be blank"
-   And I should see "Description can't be blank"
+  And I press "Create Ticket"
+  Then I should see "Ticket has not been created."
+  And I should see "Title can't be blank"
+  And I should see "Description can't be blank"
    
 Scenario: Creating a ticket  with a long title 
-    When I fill in "Ticket title" with "*************************************"
-    And I press "Create Ticket"
-    Then I should see "Ticket has not been created."
-    And I should see "is too long (maximum is 30 characters)"
+  When I fill in "Ticket title" with "*************************************"
+  And I press "Create Ticket"
+  Then I should see "Ticket has not been created."
+  And I should see "is too long (maximum is 30 characters)"
 
 Scenario: Creating a ticket with a short description
-    When I fill in "Ticket title" with "Non-standards compliance"
-    And I fill in "Description" with "My page"
-    And I press "Create Ticket"
-    Then I should see "Ticket has not been created."
-    And I should see "is too short (minimum is 8 characters)"
+  When I fill in "Ticket title" with "Non-standards compliance"
+  And I fill in "Description" with "My page"
+  And I press "Create Ticket"
+  Then I should see "Ticket has not been created."
+  And I should see "is too short (minimum is 8 characters)"
     
+Scenario: Creating a ticket with an attachment
+  When I fill in "Ticket title" with "Non-standards compliance"
+  And I fill in "Description" with "With this ticket, we are able to attach some files."
+  And I attach the file "test/fixtures/speed.txt" to "File"
+  And I press "Create Ticket"
+  Then I should see "Ticket has been created."
+  Then I should see "speed.txt" within "div a"
+  

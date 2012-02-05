@@ -1,4 +1,4 @@
-<%=form_for [@project,@ticket] do |f| %>
+<%=form_for [@project,@ticket],:html=>{ :multipart => true } do |f| %>
        <%=f.error_messages%>
        <div id="form_for_ticket">
       
@@ -18,6 +18,13 @@
 	  	            <%=f.text_area :description%>
                </div> 
            
+                <div class="label_cell">
+                    <%=f.label :asset, "File"%>
+	           </div>
+	  
+	           <div class="input_cell">
+	  	            <%=f.file_field :asset%>
+               </div> 
            
            
                <div>

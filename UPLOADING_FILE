@@ -1,0 +1,175 @@
+
+ UPLOADING DEI FILE : LATO CLIENT
+
+L'idea dietro un campo di tipo file nella struttura della form
+(<input id="ticket_asset" name="ticket[asset]" type="file" />)
+è quella di permettere agli utenti ti includere lo straming dei dati 
+di file allegati alla presentazione della form. 
+
+Per i file di testo questo meccanismo permette un meccanismo migliore 
+di quello (cutting and pasting) implementato da un text_field, in 
+particolare quando si tratta di grossi file di testo. 
+
+Per dati binari come immagini,il meccanismo "file input" non solo è il più 
+conveniente ma è in pratica il solo modo che abbiamo.
+(RFC 1867, Form-based File Upload in HTML)
+
+Dal punto di vista dell'HTML lato client:
+
+ action==> L'azione si deve riferire ad un'azione lato server in grado di 
+           gestire la presentazione di una form di tipo multipart/form-data
+ method==> "post"
+ 
+ enctype==> "multipart/form-data"
+   
+ Possiede il campo file :  <input type="file" name="somename" size="chars">
+   
+ Come si nota l'attributo somename, viene utilizzato per piazzare il file. 
+ In pratica contiene una rappresentazione del file e quindi il filename e 
+ il suo contenuto.  
+ 
+ Si noti che abbiamo specificato anche size="chars" chars è un intero che 
+ specifica l'ampiezza del filename-box che deve essere mostrato.
+ 
+  
+ UPLOADING DEI FILE : LATO SERVER CON RAILS
+ 
+ Supponiamo ad esempio di generare un campo file in questo modo:
+ 
+   <div class="label_cell">
+                    <%=f.label :asset, "File"%>
+	           </div>
+	  
+	           <div class="input_cell">
+	  	            <%=f.file_field :asset%>
+               </div> 
+             
+ Questo andrà a generare: 
+ 
+ <div class="label_cell"> 
+                    <label for="ticket_asset">File</label> 
+	           </div> 
+	  
+	           <div class="input_cell"> 
+	  	            <input id="ticket_asset" name="ticket[asset]" type="file" /> 
+               </div> 
+           
+ 
+ Ricordiamo pure che nella form mettiamo: 
+ 
+ 
+ <%=form_for [@project,@ticket],:html=>{ :multipart => true } do |f| %>
+ ..
+ <%end%>
+ 
+ 
+ Che genera: enctype="multipart/form-data" 
+ 
+ È interessante sapere cosa viene uploadato dallo stack d'attivazione di Rails. 
+ L'oggetto in params puntato nel nostro esempio da params[:ticket][:asset] punta 
+ ad un'istanza di una sottoclasse di IO. In funzione della dimenzione del file
+ uploadato, potrà essere un'istanza di StringIO oppure di File (TEMPORANEA) 
+ 
+ In entrambi i casi, l'oggetto avrà un attributo chiamato original_filename
+ che contiene il nome del file quando era nel computer del client, e un 
+ attributo content_type che contiene il MIME type del file uploadato. Ad 
+ esempio il seguente snippettino salva un file uploadato dentro #{Rails.root}/public/uploads
+ 
+ uploaded_io = params[:ticket][:asset]
+
+ File.open(Rails.root.join('public', 'uploads', uploaded_io.original_filename), 'w') do |file|
+    file.write(uploaded_io.read)
+  end
+ 
+Una volta che il file sia stato uploadato, esiste una moltitudine di task che possiamo fare con 
+Rails, come ad esempio decidere dove salvare il file, (sul disco, su Amazon S3 ecc..) oppure 
+associare il file ad un model, per eseguire operazioni di resizing, oppure di thumbinails
+(come nel caso delle immagini). Per sfruttare al meglio tutte le cose che si possono fare con 
+un file caricato, spesso si utilizzano delle gem come Paperclip. 
+ 
+---PaperClip----------------------------------------
+
+PaperClip è una libreria facile e comoda da utilizzare che ci permette di automatizzare 
+l'uploading dei file, e di trattare i file caricati come fossero normali attributi di 
+ActiveRecord. 
+
+Questo significa che i file caricati non saranno salvati sul supporto deciso, fintanto che non
+verrà eseguito ActiveRecord::Base#save().
+
+PaperClip ci permette di gestire le validazioni basate sulle dimensioni del file, sulla presenza,
+può trasformare un immagine in thumbnails, e come requisito, desidera solo che sia installata la 
+libreria ImageMagick.  
+
+Una volta installato la libreria come indicato da PaperClip (noi con bundler) ActiveRecord::Base
+e ActiveRecord::Migration verranno decorati con dei metodi di PaperClip. 
+In particolare utilizzeremo: 
+
+has_attached_file()
+
+Nel nostro codice abbiamo invocato: 
+
+has_attached(:asset)
+
+Questo crea nella classe dove è invocato alcuni attrivuti fisici: 
+
+0) asset
+1) asset_file_name
+2) asset_file_size
+3) asset_content_type
+4) asset_updated_at 
+
+che si riferiscono agli omonimi attributi CHE DEVI CREARE NEL DATABASE. Li puoi creare a
+mano oppure con un generatore rails fornito da PaperClip. In particolare con asset assegnamo
+params[:ticket][:asset] e cioè l'istanza di IO che punta al file caricato. 
+
+Quindi possiamo creare o codesti attributi fisici direttamente dentro tickets:
+
+def self.up
+    change_table :tickets do |t|
+      t.has_attached_file :asset
+    end
+  end
+
+  def self.down
+    drop_attached_file :tickets, :asset
+  end
+   
+oppure utilizzare il generator: 
+
+ rails g paperclip ticket asset
+
+
+ 
+
+  --Storage-----------------------
+  
+  I file che arrivano come attachment, vengono salvati in una directory che si trova al path
+  specificato dall'opzione :path di has_attachment 
+  Per default questo path è :
+  
+  :rails_root/public/system/:attachment/:id/:style/:filename
+  
+  
+  
+ Attenzione perchè anche in fase di testing lascia speed.txt in codesta directory. 
+  
+  
+OSSERVAZIONE: 
+
+Il metodo asset() costruito con paperclip, ritorna un'istanza di :
+
+ Paperclip::Attachment
+ 
+In particolare questa istanza ha dei metodi utili  come path() e url(). 
+
+Si noti che, tutti i link che puntano a URL dentro la directory public, sono gestiti dal server piuttosto che dall'applicazione. 
+Tutti possono accedervi. A MENO CHE NON REGOLAMENTI. 
+
+
+ 
+ 
+
+
+   
+  
+  

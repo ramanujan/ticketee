@@ -1,0 +1,68 @@
+Multipurpose Internet Mail Extensions (MIME)
+
+Si tratta di uno standard, un insieme di specifiche, che è nato per estendere il FORMATO DELLE 
+EMAIL per supportare: 
+
+1) Testi in set di caratteri diversi da ASCII
+2) Allegati di tipo binario ( immagini, eseguibili, ecc ) 
+3) Message body con parti multiple
+4) Header information espressi in caratteri NON ASCII
+
+L'utilizzo dello standard è però cresciuto, ed ha superato i confini. Adesso è utilizzato per 
+DESCRIVERE UN CONTENUTO IN GENERALE. 
+
+
+MIME è anche un componente fondamentale in diversi protocolli di comunicazione come HTTP. 
+è utile infatti in tutti i protocolli di comunicazione che prevedono o richiedono di trasmettere
+i dati da un client e un server e viceversa, in una maniera molto simile alle email, anche se i
+dati non c'entrano niente con le email (si pensi alle rappresentazioni spedite via HTTP)  
+
+Mettere in corrispondenza messaggi(o rappresentazioni da spedire ) con il proprio MIME format 
+o estrarre tali messaggi da un MIME format è solitamente esefuito in automatico dai vari clients
+e servers. ( come ad esempio SMTP/MIME email) 
+
+Il formato di base, in parole povere, dice che un messaggio da scambiare, come ad esempio una email,
+deve essere inviluppato in:
+
+1) HEADERS
+2) BODY 
+ 
+Esempi di HEADERS utilizzati nel protocollo SMTP sono : 
+
+"To:", 
+"Subject:", 
+"From:", 
+"Date:". 
+
+MIME definisce una collezione di headers da utilizzarsi per le email.L'idea nel MIME è che deve 
+aggiungere del valore aggiunto ai messaggi spediti. Deve in altri termini aggiungere degli 
+attributi che il solo corpo del messaggio non ha, deve cioè spiegare un contesto del messaggio.
+  
+Tra questi headers ad esempio, esiste Content-type: che ci serve a specificare il tipo di messaggio
+cioè se si tratta di un file di testo, binario ecc.. (vedremo meglio dopo), nella specifica inoltre
+si dice che headers come Subject: possono contenere caratteri non ascii.
+
+MIME è ESTENDIBILE!  
+
+la sua definizione include un metodo per registrare nuovi contenuti, nuovi tipi di dato, cioè 
+ci forisce un meccanismo per dire "Guarda il messaggio che ti sto mandando, è codificato in 
+questo modo ecc.."
+
+MIME-Version: 1.0 ==> La presenza di questo HEADER nell'envelope spedito, ci dice che 
+                      la rappresentazione, il messaggio, è formattato MIME.
+
+Content-ID: ===> Questo è principalmente utilizzato in MULTI-PART-MESSAGES. Si tratta di un 
+                 identificatore globale, che identifica univocamente UNA PARTE DI UN MESSAGGIO
+                 MULTI-PART. 
+                 
+Content-Type: ===>Questo header identifica un INTERNET MEDIA TYPE consistente in type/subtype
+                  Ad esempio: 
+                    Content-type: text/plain
+                  Oppure nel caso ad esempio di email con attachment: 
+                    Content-type: multipart/mixed: text/plain, image/jpeg
+                    
+Content-Disposition:
+
+Content-Transfer-Encoding:                    
+                    
+                                    

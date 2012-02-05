@@ -54,6 +54,15 @@
               Created by <b><%=@ticket.user.email%></b> 
                 about <%=distance_of_time_in_words_to_now @ticket.created_at,true%> ago
            </div>
+           
+           <%if @ticket.asset.exists?%>
+              <div>
+              
+                 Attached files: <%=link_to File.basename(@ticket.asset.path),@ticket.asset.url%> 
+                 (<%=number_to_human_size(@ticket.asset_file_size)%>)        
+              </div>  
+           <%end%>
+            
        </div>   
        
         

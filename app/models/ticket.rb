@@ -5,6 +5,6 @@ class Ticket < ActiveRecord::Base
  validates  :title, :presence=>true, :length=>{:maximum=>30} 
  validates  :description, :presence=>true, :length=>{:minimum=>8}
  
+ has_attached_file :asset
  
-   
 end
