@@ -32,11 +32,11 @@ Then /^I should see "([^"]*)" within "([^"]*)"$/ do |arg1, arg2|
   end
 =end
 
-   
+ p page.html  
  page.should have_css(arg2,:text=>arg1), 
                       "Expected to see #{arg1.inspect} inside #{arg2}, but did not."
 
-   
+  
 
 end
 

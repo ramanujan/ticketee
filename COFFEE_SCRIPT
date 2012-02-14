@@ -1,0 +1,163 @@
+CoffeeScript è un piccolo linguaggio che viene compilato in JavaScript. La sintassi è molto semplice e viene
+trasformata quindi in JavaScript. Ad esempio: 
+
+  square = (x) -> x * x 
+
+Questo pezzetto di codice viene compilato in :
+
+  
+  var square;
+  
+  square = function(x){
+    
+      return x * x;
+  }
+  
+  
+Nella versione CoffeeScript, creaimo una variabile e gli assegniamo una funzione. Il blocco della funzione
+viene assegnato con -> e i parametri con (). Si vede come 4 righe JavaScript vengono compresse in una sola
+riga in CoffeScript. 
+
+Ogni volta che generiamo un controller in Rails, un nuovo file viene aggiunto in 
+app/assets/javascripts/[controller_name].js.coffee ( nel caso in cui tu abbia installato coffee-rails gem )
+Questo file indica la locazione, il posto adeguato, per inserire il codice CoffeeScript necessario, e cioè 
+in un posto specifico alla view e al controller interessato. 
+
+Nel nostro caso dobbiamo aggiungere del codice JavaScript che deve essere eseguito quando il client preme
+il link [Add Another File]. Questo si trova nella view relativa a new tiecket, quindi è relativo al controller
+Ticket, all'azione new() e alla view di new.html.erb. 
+
+In questo esempio utilizziamo : 
+
+$(-> 
+
+Con questa sintassi ovviamente, stiamo utilizzando JQuery + CoffeScript. Infatti $() è uno short-cut verso
+il metodo jQuery(). Il metodo jQuery può essere invocato in vari modi (Scenari) :
+
+1) jQuery( selector [, context] )
+2) jQuery( html [, ownerDocument] )
+3) jQuery( callback )
+
+Nell'esempio lo stiamo utilizzando proprio in un meccanismo tipico del terzo scenario. 
+
+ jQuery(callback) 
+ 
+Serve a legare una funzione, che deve essere eseguita quando il DOM ha finito di caricarsi. Questo metodo
+funziona esattamente come $(document).ready(). Ad esempio: 
+
+ $(
+   function(){
+    // Document is ready
+   }
+ 
+ );
+ 
+Questo è proprio il modo in cui lo stiamo utilizzando noi, però nella versione CoffeScript. In una normale 
+versione JavaScript dobbiamo inserire il seguente pezzo di codice:  
+
+
+$(
+  function() {
+    return $('a#add_another_file').click( 
+                                         function() {
+                                            var url;
+                                            url = "/static_files/new?number=" + $('#files input').length;
+                                            return $.get(url, 
+                                                         function(data) {
+                                                            return $('#files').append(data);
+                                                            }
+                                                        );
+                                          }
+                                         );
+  }
+
+);
+
+ 
+ 
+Analisi:  
+ 
+ $(
+   function() {
+     return $('a#add_another_file').click( 
+
+Sta utilizzando il metodo jQuery() per selezionare un elemento <a> nalla pagina che però abbia un 
+id='add_another_file', QUANDO LA PAGINA È STATA CARICATA, e quindi IL DOM È PRONTO. jQuery ritorna 
+un l'oggetto del DOM nell'astrazione di jQuery, e in questo oggetto noi possiamo invocare senz'altro
+il metodo click(). Il metodo click() accetta come argomento una funzione JavaScript da accendere 
+quando viene cliccato l'elemento. 
+
+Aggiungiamo una linea:
+
+
+$(
+  function() {
+    return $('a#add_another_file').click( 
+                                         function() {
+                                            var url;
+                                            url = "/static_files/new?number=" + $('#static_files input').length;
+          
+In questa linea viene generato l'URL, che dobbiamo utilizzare per accendere l'azione desiderata nel
+server. In pratica a questo URL verrà aggiunta una variabile, la variabile number allegata alla query-string.
+$('#static_files input') raggruppa in un array tutti gli elementi <input> dentro un elemento con 
+id='static_files' dentro la pagina, quindi $('#static_files input').length ne ritorna il numero di elementi.
+
+
+Aggiungiamo una linea: 
+
+$(
+  function() {
+    return $('a#add_another_file').click( 
+                                        function() {
+                                          var url;
+                                          url = "/static_files/new?number=" + $('#static_files input').length;
+                                          return $.get(url, 
+
+Si sta invocando il metodo jQuery.get(). Questo metodo da luogo ad un'invocazione asincrona, una request 
+asincrona, all'URL specificato. 
+   
+Aggiungiamo una linea:   
+   
+$(
+  function() {
+    return $('a#add_another_file').click( 
+                                        function() {
+                                          var url;
+                                          url = "/static_files/new?number=" + $('#static_files input').length;
+                                          return $.get(url, 
+                                                       function(data) {
+                                                            return $('#static_files').append(data);
+                                                        }
+                                                       );
+                                         }
+                                        )              
+             }
+)
+                                                       
+ Il secondo parametro di get() è una funzione, che ha il compito di gestire quanto ritornato dal server 
+ in risposta alla chiamata asincrona. In pratica la funzione di gestione, l'handler per così dire, 
+ aggiunge ($.append) quanto arriva da remoto dentro un elemento con id='static_files' in coda ad eventuali
+ altri elementi al suo interno.    
+ 
+ Vediamo che tutto questo, scritto in CoffeeScript è molto più compatto: 
+ 
+ 
+ $(->
+     $('a#add_another_file').click(->
+                                   	url = "/static_files/new?number=" + $('#static_files input').length
+                                   	$.get(url,(data)->
+                                   	                $('#static_files').append(data) 
+                                   	      )
+ 
+                                   )
+  )
+  
+  
+  Quando al server arriva la richiesta di /assets/application.js la richiesta viene gestita dalla gem 
+  Sprockets che combina jquery, jquery_ujs, e pure app/assets/javascripts/tickets.js.coffee
+  in un file javascript unico, dopo aver trasformato il codice CoffeScript nel rispettivo JavaScript. 
+  
+  Nell'ambiente di production, questo file viene compilato solo la prima volta cioè alla very first request,
+  e quindi inserito in cache. 
+  
+                                                         

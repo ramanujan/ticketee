@@ -1,0 +1,15 @@
+<!-- -->
+<%=fields_for @ticket do |f| %>
+  <%=f.fields_for :assets, :child_index=>number do |asset_builder|%>
+    <div class="label_cell">
+      <%=asset_builder.label :asset, "File ##{number+=1}"%>
+    </div>
+  
+    <div class="input_cell">
+      <%=asset_builder.file_field :asset%>
+    </div> 
+   <%end%> 
+
+<%end%>  
+  
+ 

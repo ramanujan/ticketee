@@ -3,7 +3,7 @@ require 'spec_helper'
 
 =begin
          NOTA BENE: Tutto ciò che si trovi nel blocco before(:each) viene eseguito 
-                    nello stesso scope dell'oggetto creato per l'esempio. Inoltre a
+                    nello stesso scope dell'oggetto creato per l'esempio (nel test). Inoltre a
                     partire dai blocchi before più esterni, e andando verso l'interno
                     è come se fosse un unico blocco before(:each) 
                     

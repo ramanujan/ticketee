@@ -112,8 +112,10 @@ class TicketsController < ApplicationController
      def new 
         
         @title= "New tickets for #{@project.name} - "
-        @ticket = @project.tickets.build
-         
+        @ticket = @project.tickets.build # Prepara un @ticket vuoto
+        @ticket.assets.build()
+       
+        
      end
 
 
@@ -155,9 +157,10 @@ class TicketsController < ApplicationController
 
 
      def show
+       
        @title = "Showing ticket: #{@ticket.title} - "
-       p "@ticket.asset====>#{@ticket.asset}" 
-       p "@ticket.asset====>#{@ticket.asset.class}"
+       
+          
      end 
 
      

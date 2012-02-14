@@ -83,24 +83,25 @@ Dal punto di vista dell'HTML lato client:
  
 Una volta che il file sia stato uploadato, esiste una moltitudine di task che possiamo fare con 
 Rails, come ad esempio decidere dove salvare il file, (sul disco, su Amazon S3 ecc..) oppure 
-associare il file ad un model, per eseguire operazioni di resizing, oppure di thumbinails
-(come nel caso delle immagini). Per sfruttare al meglio tutte le cose che si possono fare con 
-un file caricato, spesso si utilizzano delle gem come Paperclip. 
+associare il file ad una classe del MODEL, per eseguire operazioni quali il resizing, oppure il 
+thumbinails (scalare la foto, tipo anteprima, ovviamente nel caso delle immagini). Per sfruttare 
+al meglio tutte le cose che si possono fare con un file uploadato dal client, spesso si utilizzano 
+delle librerie, dei gem come Paperclip. 
  
----PaperClip----------------------------------------
+---PaperClip-------------------------------------------------------------------------------------
 
 PaperClip è una libreria facile e comoda da utilizzare che ci permette di automatizzare 
 l'uploading dei file, e di trattare i file caricati come fossero normali attributi di 
 ActiveRecord. 
 
-Questo significa che i file caricati non saranno salvati sul supporto deciso, fintanto che non
-verrà eseguito ActiveRecord::Base#save().
+Questo significa che i I FILE CARICATI (UPLOAD) NON SARANNO SALVATI SU SUPPORTO FISICO DEFINITIVO, 
+FINTANTO CHE NON VERRÀ ESEGUITA LA PROPAGAZIONE DEL RELATIVO RECORD CON ActiveRecord::Base#save().
 
 PaperClip ci permette di gestire le validazioni basate sulle dimensioni del file, sulla presenza,
 può trasformare un immagine in thumbnails, e come requisito, desidera solo che sia installata la 
-libreria ImageMagick.  
+libreria ImageMagick (se devi lavorare con immagini).  
 
-Una volta installato la libreria come indicato da PaperClip (noi con bundler) ActiveRecord::Base
+Una volta installato la libreria come indicato da PaperClip ( noi con bundler ) ActiveRecord::Base
 e ActiveRecord::Migration verranno decorati con dei metodi di PaperClip. 
 In particolare utilizzeremo: 
 
@@ -110,7 +111,7 @@ Nel nostro codice abbiamo invocato:
 
 has_attached(:asset)
 
-Questo crea nella classe dove è invocato alcuni attrivuti fisici: 
+QUESTO CREA NELLA CLASSE DA DOVE VIENE INVOCATO I SEGUENTI ATTRIBUTI FISICI: 
 
 0) asset
 1) asset_file_name
@@ -121,7 +122,6 @@ Questo crea nella classe dove è invocato alcuni attrivuti fisici:
 che si riferiscono agli omonimi attributi CHE DEVI CREARE NEL DATABASE. Li puoi creare a
 mano oppure con un generatore rails fornito da PaperClip. In particolare con asset assegnamo
 params[:ticket][:asset] e cioè l'istanza di IO che punta al file caricato. 
-
 Quindi possiamo creare o codesti attributi fisici direttamente dentro tickets:
 
 def self.up
@@ -141,35 +141,171 @@ oppure utilizzare il generator:
 
  
 
-  --Storage-----------------------
+  --Storage----------------------------------------------------------------------------------------------------------------
   
-  I file che arrivano come attachment, vengono salvati in una directory che si trova al path
-  specificato dall'opzione :path di has_attachment 
+  I file che arrivano come attachment, vengono salvati (Quando invochiamo ActiveRecord::Base#save ) in una directory che
+  si trova al path specificato dall'opzione :path di has_attachment 
   Per default questo path è :
   
   :rails_root/public/system/:attachment/:id/:style/:filename
   
   
   
- Attenzione perchè anche in fase di testing lascia speed.txt in codesta directory. 
+  Attenzione perchè anche in fase di testing lascia speed.txt in codesta directory. 
   
   
-OSSERVAZIONE: 
+  OSSERVAZIONE: 
 
-Il metodo asset() costruito con paperclip, ritorna un'istanza di :
+  Il metodo asset() costruito con paperclip, ritorna un'istanza di :
 
- Paperclip::Attachment
+    Paperclip::Attachment
  
-In particolare questa istanza ha dei metodi utili  come path() e url(). 
+  In particolare questa istanza ha dei metodi utili  come path() e url(). 
 
-Si noti che, tutti i link che puntano a URL dentro la directory public, sono gestiti dal server piuttosto che dall'applicazione. 
-Tutti possono accedervi. A MENO CHE NON REGOLAMENTI. 
+  Si noti che, tutti i link che puntano a URL dentro la directory public, sono gestiti dal server piuttosto che dall'applicazione. 
+  Tutti possono accedervi. A MENO CHE NON REGOLAMENTI. 
 
 
+-- ATTACHING MANY MANY FILES -------------------------------------------------------------------------------------------- 
+
+Supponiamo che ad un certo punto dal cliente venga richiesto di aumentare il numero di files uploadabili. Ad esempio da 1 
+a tre file alla volta. Potremmo aggiungerli a mano come fatto per asset, uno per volta, ma questo non è comodo. Infatti 
+magar dopo un po di tempo ci viene detto che bisogna portare questo numero da 3 a 10 e poi a quanti ne desidera l'utente. 
+
+Il modo migliore è quello di creare una nuova classe del MODEL che chiameremo Asset. Questa classe del model sarà poi
+associata con Ticket tramite un'associazione many<=>to<=>one. In questo caso, possiamo anche sfruttare 
+il concetto di NESTED ATTRIBUTEs e fields_for(), in modo da generare delle form complesse.   
+
+In pratica quello che dobbiamo fare è creare la classe del model Asset in questa maniera: 
+
+class Asset < ActiveRecord::Base
+   
+     has_attached_file :asset
+
+
+end
+
+e introdurre l'associazione nella classe del model Ticket: 
+
+class Ticket < ActiveRecord::Base
+
+ ...
  
+ has_many   :assets
+ accepts_nested_attributes_for :assets
+ 
+end
  
 
+Quindi forti di questo MODEL, andare a curare la nostra view. In pratica andiamo a modificare 
+_form.html.erb affinchè utilizzi fields_for() : 
 
+  <%=f.fields_for :assets do |builder| %>
+             <div class="label_cell">
+               <%=builder.label :asset, "File ##{number+=1}"%>
+	         </div>
+	  
+	         <div class="input_cell">
+	  	       <%=builder.file_field :asset%>
+             </div> 
+           
+            <%end%>  
+
+questo andrà a generare il seguente snippet HTML : 
+  
+  <div class="label_cell"> 
+    <label for="ticket_assets_attributes_0_asset">File #1</label> 
+  </div> 
+  
+  <div class="input_cell"> 
+    <input id="ticket_assets_attributes_0_asset" name="ticket[assets_attributes][0][asset]" type="file" /> 
+  </div> 
+           
+  <div class="label_cell"> 
+    <label for="ticket_assets_attributes_1_asset">File #2</label> 
+  </div> 
+  
+  <div class="input_cell"> 
+    <input id="ticket_assets_attributes_1_asset" name="ticket[assets_attributes][1][asset]" type="file" /> 
+  </div> 
+           
+  ... e così via a seconda di quanti ne abbiamo costruiti nel cotroller.
    
   
+ 
+ 
+ --- Serving files through a controller -----------------------------------------------------------
+ 
+ Ogni file nella directory public, viene servito automaticamente dai server Rails come mongrails, 
+ bypassando ogni attivazione dello stack dell'applicativo. Possiamo risolvere questa situazione, 
+ costruendo un controller per servire e quindi autorizzare, e che comunque controlli la distribuzione 
+ di questi files. Quando dico ogni file nella direstory public, significa localhost:300/404.html, 
+ /system e così via, senza anteporre public. 
+ 
+ La tecninca è sempre la stessa. Si utilizza un before_filter() come fatto in TicketsController, 
+ in modo da vedere se un utente che tenta di accedere ad un file nella directory public sia stato 
+ autorizzato.
+ 
+ Come prima cosa, generiamo un controller che chiameremo StaticFilesController: 
+   
+   rails g controller static_files 
+  
+ Il metodo show() avrà il compito di spedire il file richiesto. Ovviamente il file dovrà essere 
+ al di fuori della directory public e verrà servito per mezzo di ActionController:: 
+ 
+
+---Adding file with JavaScript-------------------------------------------------------------------
+
+ Per utilizzare JavaScript con capybara, dobbiamo utilizzare WebDriver. WebDriver è un browser 
+ driver che serve a capybara per supportare javascript. In questo esempio, stiamo utilizzando 
+ Javascript per inserire allegati multipli, con la tecnica di aggiungerli con [Add Another File]
+ 
+ Affinchè Capybara utilizzi javascript nell'esecuzione degli scenari, bisogna utilizzare un'annotazione
+ @javascript prima dello scenario. L'idea è che dopo aver riempito un campo con il file tag, esista
+ un'altro link da seguire, che ci permette di accendere un evento javascript. In pratica seguire 
+ il link [Add Another File] attiva una chiamata asincrona (ajax) verso un'azione nel server. Possiamo
+ utilizzare JQuery:
+ 
+    <%=link_to "Add another file",
+                         new_static_file_path,
+                         :remote=>true,
+                         :update=>"static_files",
+                         :position=>"after" 
+              %> 
+    
+  :remote=>true           : Serve ad attivare AJAX e asynchronous java script. Vogliamo generare
+                            un link cioè, che utilizza javascript per eseguire richieste in background,
+                            dette asyncronous request. Per la precisione, la richiesta utilizza un pezzo
+                            di codice fornito da jquery-ujs.js che proviene dalla gem jquery-rails. 
+  
+  :update=>"static_files" : La richiesta di contenuto asincrono, risponde con un qualche contenuto, che 
+                            viene gestito con :update=> e :position=>.
+                            
+                            :update=> dice a Rails di dire al pezzo di codice JavaScript che gestisce la 
+                                      risposta, che VUOI INSERIRE IL CONTENUTO CHE ARRIVA DA UNA RICHIESTA
+                                      IN BACKGROUND IN UN ELEMENTO CON ATTRIBUTO id="static_files"
+                            
+                            :position=> Dice a Rails che desideri inserire il contenuto DOPO OGNI ALTRO
+                                        CONTENUTO NELL'ELEMENTO.            
+ 
+ 
+
+  Come si sarà notato il link, punta ad un'azione di TicketsController. Quest'azione è new() che ha lo scopo
+  di spedire un frammento di html. Questo frammento è in pratica un elemento : 
+  
+    <div class="label_cell">
+                 <%=asset_builder.label :asset, "File ##{number+=1}"%>
+	</div>
+	  
+	<div class="input_cell">
+	  <%=asset_builder.file_field :asset%>
+    </div> 
+               
+  Da piazzare (appending) dentro l'elemento con id="static_files" che racchiude la logica di visualizzazione dei files-field
+  dentro la view new.html.erb e in particolare nel partial _form.html.erb (relativo all'azione new di TicketsController) 
+
+  
+
+
+
   

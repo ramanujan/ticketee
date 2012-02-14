@@ -85,7 +85,7 @@ Ticketee::Application.routes.draw do
        :as => :update_user_permissions
     
     
-    
+    resources :static_files
     
     
 
