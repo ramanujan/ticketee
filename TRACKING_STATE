@@ -1,0 +1,47 @@
+---Tracking State---
+
+Nella nostra applicazione, i ticket hanno lo scopo di fornire un workflow generale ad un problema oppure ad un suggerimento.
+Il workflow generale di un ticket ad esempio è:
+
+1) Un utente crea un nuovo ticket, e il ticket è nello stato NEW
+
+2) Ad un certo punto uno o più sviluppatori, vedono il ticket e decidono di lavorarci sopra, il ticket viene switchato da NEW
+   a OPEN. 
+
+3) Completato il lavoro, il ticket viene marcato come RESOLVED. 
+   
+4) È possibile che gli sviluppatori, necessitino di maggiori informazioni. Allora devono attivare un'altro stato che 
+   è "NEEDS MORE INFO" 
+   
+5) Un ticket potrebbe essere un duplicato di un'altro ticket, oppure potrebbe riguardare qualcosa che gli sviluppatori
+   non ritengono necessario da inserire/modificare. In questi casi il ticket può essere switchato a DUPLICATE oppure INVALID.
+   
+Qui il punto è che un ticket ha un suo proprio workflow, e che un workflow ruota intorno ad un cambiamento di stato. In 
+generale nei requisiti iniziali, si permetterà agli amministratori di CREARE NUOVI STATI per i ticket, ma non di 
+ELIMINARE STATI PRECEDENTEMENTE CREATI. La ragione è che, se un amminstratore cancellasse uno stato creato e 
+utilizzato con certi vecchi ticket, allora non si svrebbe più traccia dell'esistenza di questo stato. 
+Pertanto, una volta creato e utilizzato,non deve poter essere cancellato. (Alternativamente uno stato, potrebbe essere mosso 
+in un archivio di stati che non possono essere assegnati a nuovi ticket ma che però saranno ancora visibili e validi per i 
+vecchi tickets.)
+
+Per tracciare gli stati, lasciamo agli utenti di LASCIARE UN COMMENTO CONNESSO AL TICKET. Con il commento, gli utenti saranno
+in grado di lasciare un messaggio di testo, un commento sul ticket, e magari potremmo aggiungere la funzionalità di 
+selezionare uno stato ( o di cambiarlo ) tramite una select-box. Ovviamente queste abilità dovranno essere controllate.
+
+---State---
+ 
+ Il concetto di STATO fornisce un meccanismo standard per il ticket tracking. In sostanza un Ticket si può portare da uno stato
+ ad un'altro, e dando uno sguardo allo stato del Ticket, un utente potrà rendersi conto se il ticket necessita di ulteriori 
+ lavori, oppure se è stato completato.
+ 
+ L'idea è di piazzare, sotto la text-area relativa al commento, una SELECT BOX con cui chi lascia il commento ha la capacità 
+ potenziale di selezionare anche uno stato. Questi stati verranno salvati in una tabella, states e verranno modellati da un'
+ opportuna risorsa, la classe del model State. Si noti che dovremo decidere chi degli utenti potrà aggiungere degli stati
+ nuovi, e quale sia lo stato di default, e inoltre dovremo decidere anche chi può cambiare lo stato di un ticket.
+ 
+  
+   
+
+
+    
+      

@@ -25,20 +25,6 @@ Given /^"([^"]*)" has created a ticket for this project:$/ do |email, table|
 
 end
 
-Then /^I should see "([^"]*)" within "([^"]*)"$/ do |arg1, arg2|
-=begin 
-  within("#{arg2}") do
-      page.should have_content arg1
-  end
-=end
-
- p page.html  
- page.should have_css(arg2,:text=>arg1), 
-                      "Expected to see #{arg1.inspect} inside #{arg2}, but did not."
-
-  
-
-end
 
 
 =begin
@@ -65,17 +51,6 @@ end
 =end
 
 
-=begin
-        In codesto step sto utilizzando una funzionalità di Capybara che è 
-        attach_file(). attach_file dice a Capybara di cercare un campo file
-        (file field in page) e di attaccare (come allegato) il file specificato 
-        dal path. Si noti che la ricerca del campo file avviene come al solito,
-        cioè è una ricerca per name,id,label. 
-         
-=end
 
 
-When /^I attach the file "([^"]*)" to "([^"]*)"$/ do |path,file_field|
-  attach_file(file_field,path)
-end
 

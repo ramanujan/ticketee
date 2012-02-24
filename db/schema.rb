@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120206162223) do
+ActiveRecord::Schema.define(:version => 20120219150243) do
 
   create_table "assets", :force => true do |t|
     t.string   "asset_file_name"
@@ -19,6 +19,14 @@ ActiveRecord::Schema.define(:version => 20120206162223) do
     t.integer  "asset_file_size"
     t.datetime "asset_updated_at"
     t.integer  "ticket_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "comments", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "ticket_id"
+    t.text     "text"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

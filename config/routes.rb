@@ -70,7 +70,19 @@ Ticketee::Application.routes.draw do
  
   resources :projects do
     resources :tickets
-    end
+  end
+
+  resources :tickets do
+    resources :comments
+  end
+
+=begin
+      Qualche volta è bello poter organizzare gruppi di controllers all'interno di uno stesso namespace. Un po come 
+      creare un package di controller. Molto comunemente, potremmo avere la necessità di raggruppare dei controllers
+      con finalità amministrative, ad esempio sotto il namespace Admin:: In questo caso i controllers devono essere 
+      messi nella cartella app/controllers/admin 
+=end
+
 
    namespace :admin do
          root :to=>"base#index" # Si riferisce a Admin::BaseController.index 

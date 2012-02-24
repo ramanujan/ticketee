@@ -1,0 +1,143 @@
+Dal punto di vista del controller, esistono 3 modi principali per creare un response HTTP:
+
+1) Call render(),      per creare un response, completo da ritornare al browser
+
+2) Call redirect_to(), per ritornare un HTTP REDIRECT STATUS CODE (302) al browser
+
+3) Call head() per creare un response consistente solo in HTTP HEADERS
+
+--- Utilizzo di render() ---
+
+Facciamo un esempio: 
+
+render :new 
+render 'new'
+render 'new.html.erb' 
+
+Render in questi casi, crea un response tramite convention-over-configuration. In pratica si tratta di 
+presentare come response new.html.erb relativa all'azione new del controller attivato. 
+In generale con render() possiamo creare diverse tipologie di response. 
+
+1) Default Rails Template
+2) Specific Template
+3) file
+4) inline code
+5) nothing
+6) text,json,xml
+7) partials
+8) ...
+
+
+---RENDER NOTHING---
+
+render :nothing=>true
+
+Produrrà :
+
+ HTTP/1.1 200 OK
+ Connection: close
+ Date: Sun, 24 Jan 2010 09:25:18 GMT
+ Transfer-Encoding: chunked
+ Content-Type: */*; charset=utf-8
+ X-Runtime: 0.014297
+ Set-Cookie: _blog_session=...snip...; path=/; HttpOnly
+ Cache-Control: no-cache 
+
+Come si vede si tratta di una risposta vuota, infatti dopo l'ultima linea di headers http non vi sarà
+alcun contenuto. Tuttavia il response è 200 ok, cioè successful. Il response status, lo possiamo controllare
+via render() tramite l'opzione :status=> 
+
+A cosa serve questo tipo di response vuoto? Principalmente serve negli ambiti AJAX, in quegli scenari dove si
+desideri mandare un ACK al browser, per avvisarlo del fatto che la richiesta è stata completata. 
+Al posto di render :nothing=>true, vorse è meglio utilizzare head()  come vedremo dopo. 
+ 
+
+
+---RENDER ACTION VIEW---
+
+Se desideriamo presentare un response, una view, un template che è legata ad un'altra azione all'interno 
+dello stesso controller, allora possiamo utilizzare render() in 3 modi. Ad esempio
+mettiamoci in questa situazione:
+
+  if @ticket.save 
+                flash[:notice]="Ticket has been created."
+                redirect_to [@project, @ticket] 
+                
+   else
+               
+                flash[:error]="Ticket has not been created."
+                @title="Ticket creation errors - "
+                render :new # è come render 'new' ovvero render 'new.html.erb' 
+   end        
+ 
+ 
+Come si vede in caso si sia verificato un problema durante la propagazione del record
+@ticket, allora verrà presentata la view relativa all'azione new del medesimo
+controller (TicketsController). 
+
+1) render :new
+2) render "new"
+3) render "new.html.erb"
+
+Per essere espliciti dovremmo utilizzare render in questo modo:
+
+4) render :action=>:view 
+
+
+---RENDERING AN ACTION'S TEMPLATE FROM ANOTHER CONTROLLER---
+
+Alcune volte dobbiamo presentare come rresponse, un template relativa ad un'altra azione 
+associata ad un controller completamente diverso. In questo caso dobbiamo sapere che render()
+accetta sia full path che perorsi relativi ad app/views 
+Mettiamoci ad esempio nella seguente situazione:
+
+def create
+    
+    @comment = @ticket.comments.build(:text=>params[:comment].merge(:user=>current_user) ) 
+    
+    if @comment.save 
+                flash[:notice]="Comment has been created."
+                redirect_to [@ticket.project, @ticket] 
+           else
+               
+                flash[:error]="Comment has not been created."
+                @title="Adding comment errors - "
+                render :template => "tickets/show"
+           end        
+        
+            
+end
+
+In questo caso se ci sono problemi, nella propagazione del commento al ticket, allora 
+vogliamo che sia mostrato come response il template relativo all'azione show del controller
+TicketsController. In questi casi allora si utilizzi:
+
+render :template=> "tickets/show" che è equivalente a render :template=>"/app/views/tickets/show.html.erb"
+
+
+
+---RENDERING AN ARBITRARY FILE---
+
+render :file =>"/u/apps/warehouse_app/current/app/views/products/show"
+
+L'opzione :file riceve come valore un percorso assoluto, relativo al file system. Il file in questione 
+verrà presentato dentro il layout corrente (application.html.erb) se invece desideriamo presentarlo
+al di fuori del layout allora dobbiamo passare l'opzione :layout=>false
+
+render :file =>"/u/apps/warehouse_app/current/app/views/products/show",
+       :layout=>true
+
+
+---RENDER A PARTIAL---
+
+Quando utilizzi render() direttamente nella view come ad esempio in un file .html.erb allora
+hai intenzione di eseguire la presentazione di una parte della resa totale. Ad esempio:
+
+ <%=render "form">
+
+dentro il file new.html.erb relativo all'azione new() del controller projects (ProjectsController)
+andrà a eseguire il file _form.html.erb dentro app/views/projects/
+
+
+
+

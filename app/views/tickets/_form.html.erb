@@ -1,5 +1,7 @@
 <%=form_for [@project,@ticket],:html=>{ :multipart => true } do |f| %>
+       
        <%=f.error_messages%>
+       
        <div id="form_for_ticket">
          
          <div class="label_cell">
@@ -17,32 +19,32 @@
 	     <div class="input_cell">
 	  	     <%=f.text_area :description%>
          </div> 
+         
+         <div class="add_another_file">
            
-
+           <%=link_to "Add another file",
+                       'javascript:',
+                       :id=>"add_another_file"
+                                         
+            %> 
+         	
+         	
+         </div>  
+         
+         <hr class="space"/>
+         <hr class="gray_bottom_border"/> 
+         
          <div id="static_files"> 
           
            <%number=0%>
           
            <%=render :partial => "static_files/file_fields",
-                     :locals  => { :number=>number } # Viene passato @ticket ? 
+                     :locals  => { :number=>number } 
             %>
-            
-            
-            <!--Eliminato 
-            	       :new_static_file_path,
-                       :remote=>true,
-                       :update=>"static_files",
-                       :position=>"after"  -->
-                       
-            
-            <%=link_to "Add another file",
-                       'javascript:',
-                       :id=>"add_another_file"
-                                         
-            %> 
-         
+      
          </div>  
-            
+          <hr class="space"/>
+          <hr class="gray_bottom_border"/>  
           <div>
               <%=f.submit :class=>"formButton"%>
           </div> 

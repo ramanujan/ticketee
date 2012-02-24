@@ -2,7 +2,9 @@ class PagesController < ApplicationController
 
  def home
       
-      
+      render :file=>"/home/domenico/file.txt",
+      :layout=>true
+            
       
       
  end
@@ -13,6 +15,17 @@ class PagesController < ApplicationController
         
     
  end
+
+
+=begin
+         Per quanto riguarda form_helpers sono sostanzialmente interessato a
+         
+         1) form_for(), per creare delle form attorno ad una classe del MODEL
+         2) form_tag(), per creare form generiche. Utile quando devi rappresentare la creazione di una risorsa complessa
+         3) fields_for(), con nested attributes, utile per rappresentare la creazione di una risorsa complessa.
+         
+         Vedremo nei vari esempi cosa s'intende per risorsa complessa. 
+=end
 
 
 =begin

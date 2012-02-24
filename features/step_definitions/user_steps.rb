@@ -1,6 +1,6 @@
 Given /^there are the following users:$/ do |table|
   # table is a Cucumber::Ast::Table
-  
+
   @users=[]
   table.hashes.each do |attributes|
   # ATTENZIONE!!!! unconfirmed è String che contiene true/false (viene da un file di testo)
@@ -21,19 +21,6 @@ Given /^there are the following users:$/ do |table|
 
   end
 
-end
-
-Given /^I am signed in as "([^"]*)"$/ do |email|
-  steps %Q{ Given I am on the homepage 
-            When I follow "Login" 
-            And I fill in "Email" with "#{email}"  
-            And I fill in "Password" with "password" 
-            And I press "Login" 
-            Then I should see "Signed in successfully."}
-end
-
-When /^I check "([^"]*)"$/ do |arg1|
-  check(arg1)
 end
 
 

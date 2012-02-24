@@ -5,6 +5,7 @@
  * 	
  *= require_self
  *= require_tree . 
+ * 
  *
  * */
 
@@ -74,6 +75,26 @@ table tr:nth-child(even) td {
 .gray_top_border{
 	border-top: solid 1px #c6c6c6;
 }
+
+.cool_text_small{
+	
+	color:#444;  
+    padding: 5px 10px;
+    font-size: 1em;
+    font-family: Georgia, serif;
+    text-shadow: rgba(255,255,255,.8) 0 1px 0; 
+}
+
+
+.cool_text{
+	
+	color:#444;  
+    padding: 5px 10px;
+    font-size: 1.8em;
+    font-family: Georgia, serif;
+    text-shadow: rgba(255,255,255,.8) 0 1px 0; 
+}
+
 
 
 /* general background styling */ 
@@ -528,6 +549,8 @@ margin-left:10px;
 
 
 
+
+
 #ticket{
 	
 	padding: 1.5em;
@@ -539,13 +562,15 @@ margin-left:10px;
 #ticket_title_field { /* Attenzione non chiamarlo ticket_title collide con form */
 	
 	overflow: auto;
-    font-size: 0.8em;  
+    font-size: 1em;  
 }
 
 
 #ticket_title_field > h2 {
 	display:inline;
 }
+
+
 #ticket_edit{
 	
 }
@@ -572,8 +597,11 @@ margin-left:10px;
 #ticket_description_field{
 	
 	overflow:auto;
-    font-size:1.5em; 
+    /*font-size:1.6em; 
     border-bottom: solid 1px #ccc;
+    */
+
+
 }
 
 
@@ -585,11 +613,40 @@ margin-left:10px;
 
 
 
-.ticket_name_field a{
+.ticket_name_field {
 	 	 
 	text-decoration:none;
 	font-size:1.5em;
 }
+
+/* Add another file, file fields styling, inside new ticket form */ 
+
+.add_another_file{
+	font-size:1.3em;
+    
+
+}
+
+#static_files, #static_files .input_cell input{
+	
+	color:#444;  
+    padding: 5px 10px;
+    font-size: 1.2em;
+    font-family: Georgia, serif;
+    text-shadow: rgba(255,255,255,.8) 0 1px 0; 
+}
+
+
+
+/* Styling comments */ 
+
+#comments{
+	padding: 1.5em;
+    margin-left:5px;  
+}
+
+
+
 
 
 
@@ -734,10 +791,10 @@ a div:hover{
 
 
 
-#permissions{
-	
-	
-}
+
+
+
+
 
 
 
@@ -748,6 +805,15 @@ a div:hover{
 .removed{
 	
 }
+
+
+.colored{
+	
+	color:red; 
+}
+
+
+
 
 
 
@@ -786,7 +852,7 @@ a div:hover{
  * #div_principale div e #div_principale > div :
  * 
  *  #div_principale div => Si riferisce ad ogni <div> dentro #div_principale, ad ogni grado di profondità.
- *  #div_principale > div => Si riferisce solo a <div> ad un grado di profondità, cioè figli diretti.  
+ *  #div_principale > div => Si riferisce solo a <div> ad UN SOLO GRADO di profondità, cioè figli diretti.  
  *  
  */
 

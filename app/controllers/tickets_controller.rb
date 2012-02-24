@@ -36,7 +36,7 @@ class TicketsController < ApplicationController
     before_filter :authorize_delete!, :only=>[:destroy]
     
     def find_project  
-      
+        
         @project = Project.for(current_user).find(params[:project_id])
         
         rescue ActiveRecord::RecordNotFound
@@ -122,6 +122,7 @@ class TicketsController < ApplicationController
   
   
      def create
+
 =begin
 
     @project e @user sono già nel database. Infatti prima che sia eseguita questa azione,
@@ -134,7 +135,7 @@ class TicketsController < ApplicationController
     (1) Si noti che @user è già persistente, se creassi un nuovo ticket e invocassi
         ticket.user=@user allora questo metodo aggiornerebbe anche la foreign_key cioè 
         ticket.user_id = @user.id
-    
+      
     (2) Quando al costruttore passo :user=>@user viene aggiornata l'associazione, dal costruttore
         stesso
         
@@ -159,7 +160,7 @@ class TicketsController < ApplicationController
      def show
        
        @title = "Showing ticket: #{@ticket.title} - "
-       
+       @comment = @ticket.comments.build
           
      end 
 
@@ -186,7 +187,7 @@ class TicketsController < ApplicationController
      end
   
      def destroy
-          @ticket.delete
+          @ticket.destroy
           flash[:notice]="Ticket has been deleted."
           redirect_to @project 
      end

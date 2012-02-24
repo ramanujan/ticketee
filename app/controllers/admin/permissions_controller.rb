@@ -7,8 +7,8 @@
        
        <%end%>
   
-      Questo helper di rails, ci serve per costruire delle forms GENERICHE invece
-      che orientate ad una classe del model. In particolare produce il seguente 
+      Questo helper di Rails, ci serve per costruire delle forms GENERICHE invece
+      che orientate ad una classe del MODEL. In particolare produce il seguente 
       frammento HTML :
       
       <form accept-charset="UTF-8" action="/admin/users/5/permissions" 
@@ -24,16 +24,16 @@
      
      </form>
       
-    Si noti che l'URL di action, lo abbiamo generato per mezzo di un helper generato automaticamente da routes per mezzo della seguente
-    linea in routes.rb :
+    Si noti che l'URL di action, lo abbiamo generato per mezzo di un helper generato automaticamente da routes per mezzo 
+    della seguente linea in routes.rb :
     
      put 'admin/users/:user_id/permissions', 
-       :to => 'admin#permissions#update',
+       :to => 'admin/permissions#update',
        :as => :update_user_permissions
     
     
     Tutti questi giri li stiamo facendo perchè adesso non dobbiamo eseguire una normale operazione UPDATE di REST, che coinvogerebbe
-    un solo record nella tabella permissios. Qui la form presentata all'utente deve essere personalizzata. Infatti vogliamo presentare
+    un solo record nella tabella permissions. Qui la form presentata all'utente deve essere personalizzata. Infatti vogliamo presentare
     una lista di tutti i progetti presenti, con a fianco tante checkbox quante ce ne serviranno per impostare permessi relativi all'utente
     sui progetti. Orbene al'interno di: 
     
@@ -75,7 +75,7 @@
     
                
                Ricordiamo che il componente di Rails Rack (che tra le altre cose va a generare params) riceve 
-               la stringa HTTP "...?permission[1][view]=1&permission[2][view]=1... l'ananlizza e crea subito un hash 
+               la stringa HTTP "...?permission[1][view]=1&permission[2][view]=1... l'analizza e crea subito un hash 
                with indifferent access, 
                 
                 permission={ 

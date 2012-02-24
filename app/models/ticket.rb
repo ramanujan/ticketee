@@ -32,8 +32,6 @@
 #
 #
 
-
-
 class Ticket < ActiveRecord::Base
 
  belongs_to :project
@@ -41,9 +39,9 @@ class Ticket < ActiveRecord::Base
  validates  :title, :presence=>true, :length=>{:maximum=>30} 
  validates  :description, :presence=>true, :length=>{:minimum=>8}
  
- has_many   :assets
+ has_many   :assets, :dependent=>:destroy
  accepts_nested_attributes_for :assets
- 
+ has_many   :comments, :dependent=>:delete_all
  
  
 end

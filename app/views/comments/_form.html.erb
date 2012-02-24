@@ -1,0 +1,18 @@
+<%=form_for [@ticket,@comment] do |f| %>
+       
+       <%=f.error_messages%>
+        
+       <div class="label_cell">
+         <%=f.label :text,'Add a comment:'%>
+	   </div>
+	  
+	   <div class="input_cell">
+	     <%=f.text_area :text%>
+       </div> 
+         
+        <div>
+          <%=f.submit :class=>"formButton"%>
+        </div>
+
+<%end%>
+ 

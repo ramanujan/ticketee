@@ -1,11 +1,22 @@
 class Asset < ActiveRecord::Base
    
+     before_destroy :delete_asset
+     
      has_attached_file :asset, 
                        :path=>(Rails.root+"static_files/:attachment/:id/:filename").to_s
      
      # Rails.root: /home/domenico/Aptana Studio 3 Workspace/ticketee
      
      belongs_to :ticket
+     
+     private
+     
+     def delete_asset
+        p "======================================>DELETING ASSETS<============="
+        asset=nil  
+        self.save! 
+     end
+     
 
 end
 

@@ -1,0 +1,12 @@
+<%=div_for(comment) do%>
+   
+   <p>
+   	  <%=comment.user%>
+   </p>
+   
+   <p>
+   	  <%=simple_format(comment.text)%> 
+   </p>
+   
+   <hr /> 
+<%end%>
