@@ -17,7 +17,7 @@ admin_user = User.create! :email=>"admin@ticketeefoodomain123.com",:password=>"p
 admin_user.admin=true
 admin_user.confirm! 
 
-# Creo 10 utenti normali
+#   Creo 10 utenti normali
 
 
 10.times do |index|
@@ -45,3 +45,22 @@ projects.each do |project|
                              :description=>"A foo tickets. Automatic seeded",
                              :user=>admin_user if project.id.odd?       
 end
+
+
+
+# Bisogna anche creare degli stati. Iniziamo con la creazione di Open, Closed, New 
+
+State.create!(:name       => "New",
+              :background => "#85ff00",
+              :color      => "white"
+              )
+
+State.create!(:name       => "Open",
+              :background => "#00cffd",
+              :color      => "white"
+              )
+
+State.create!(:name       => "Closed",
+              :background => "black",
+              :color      => "white"
+              )

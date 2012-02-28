@@ -39,9 +39,197 @@ selezionare uno stato ( o di cambiarlo ) tramite una select-box. Ovviamente ques
  opportuna risorsa, la classe del model State. Si noti che dovremo decidere chi degli utenti potrà aggiungere degli stati
  nuovi, e quale sia lo stato di default, e inoltre dovremo decidere anche chi può cambiare lo stato di un ticket.
  
+ Perchè creiamo una classe del MODEL per modellare uno stato? Diciamo che desideriamo che alcuni utenti
+ autorizzato, siano in grado di creare i loro propri stati. Per il momento diciamo che il modello avrà 
+ un attributo #nome,#color,#background. A cosa servono #color e l'attributo #background?  In pratica 
+ a determinare l'aspetto visivo della label per questo ticket, siccome ha un contenuto informativo 
+ a livello di requisiti di business, li mettiamo come colonna nella tabella di una database. 
+ Dopo più tardi andremo anche ad aggiugere un attributo #position, che utilizzeremo per determinare 
+ l'ordinamento degli stati nella select box. 
+ 
+  rails g model state name:string color:string background:string
+ 
+ Modelliamo le seguenti associazioni prima della migrazione:
+ 
+  1) State ONE<==>TO<==>MANY Ticket
+  2) State ONE<==>TO<==>MANY Comment
+  
+ Nella migrazione aggiugngiamo:
+ 
+  add_column :tickets, :state_id, :integer
+  add_index  :tickets, :state_id
+  add_column :comments,:state_id, :integer 
+ 
+ In particolare, si noti che si è deciso di creare un indice nel database nella colonna state_id relativa
+ alla tabella tickets. In questo modo, possiamo velocizzare le query che cercano un record passando
+ come input alla query proprio questa colonna. Come effetto collaterale è che risulta in writes più lente
+ e più spazio su disco.
+ 
+ ---DATABASE INDEXES-------------------------------------------------------------------------------------------------------------------------------------
+ 
+ Un indice è una struttura dati associata ad una tabella. Il concetto implementato da un index non è molto diverso 
+ da quello che si trova all'inizio di un libro: senza di esso trovare un paragrafo oppure un capitolo diventa molto difficile
+ e si devono scorrere tutte le pagine finchè non lo si trovi. Oppure si pensi ad un indice analitico. È utilizzato per trovare 
+ tutte le occorrenze di una certa parola.
+ 
+ Se una tabella non ha indici associati, l'unico modo per trovare un determinato record è quella di eseguire un'operazione FULL-SCAN-TABLE
+ e cioè una lettura riga per riga di tutti i records della tabella. 
+ 
+ Gli indici sono strutture legate alle tabelle, che PUNTANO ALLE INFORMAZIONI PRESENTI IN UNA TABELLA COME UNA SORTA DI SEGNALIBRO. Ad 
+ esempio, con MySQL, possiamo creare diversi tipi di indice. 
+ 
+ 1) PRIMARY KEY
+ 2) UNIQUE
+ 3) INDEX
+ 4) FULLTEXT
+    
+ Un indice è composto da nodi. Un nodo è una struttura composta da una chiave ed un valore. Per capire cosa sia un nodo, si pensi alla metafora 
+ dell'indice di un libro: un nodo dell'indice conterrà il titolo di un capitolo oppure di un paragrafo (valore)  e il numero di pagina dove si trova questa 
+ informazione (chiave). Allo stesso modo, un indice dentro la tabella, conterrà un certo valore, diciamo un certo record, e il numero di riga dove si trova
+ l'informazione.(una chiave)
+ 
+ Grazie agli indici possiamo velocizzare drammaticamente le query. Ad esempio se in una tabella persons andiamo a creare un indice con la colonna
+ last_name allora avremo un rapido accesso alle liste di righe della tabella persons WHERE last_name=="SMITH" oppure last_name>="X" AND last_name<="Y"  
+ In generale TUTTE LE QUERY SQL CON CONDIZIONI DI RICERCA ESPRESSE SU COLONNE INDICIZZATE TRAGGONO VANTAGGI IN TERMINI DI VELOCITÀ D'ESECUZIONE.
+ 
+ Oltre a essere strutture più piccole rispetto la tabella a cui fanno riferimento, gli indici spesso hanno un trattamento di riguardo. Ad esempio con
+ MySQL I nodi comprensivi di chiave e di valore, vengono conservati in un buffer di memoria denominato key_buffer, che contiene i nodi più utilizzati
+ di recente. 
+ 
+ Ricordiamo che con gli indici possiamo anche ottimizzare tutte quelle query che coinvolgono delle joins di tabelle. Ad esempio con il comando
+ explain, possiamo renderci conto di quali query SQL vanno riscritte, oppure di quali tabelle vadano modificate in modo tale che il server risorva il
+ JOIN nel modo meno oneroso possibile, riducendo il numero di combinazioni da esaminare. 
+ 
+ EXPLAIN produce una riga di output per ogni tabella referenziata dalla query. L'ordine di visualiizzazione delle righe è importante: indica la 
+ sequenza che MySQL utilizzerà per considerare le tabelle nella risoluzione dei vincoli di JOIN, indipendentemente dall'ordine in cui appaiono 
+ nella clausola from. Si guardi l'esempio con il database sakila: 
+ 
+ explain select first_name, 
+                last_name, 
+                title 
+         from films,actors,actors_films 
+         where films.film_id = actors_films.film_id 
+         and actors.actor_id = actors_films.actor_id 
+         and length > 180;
+  
+
++----+-------------+--------------+------+---------------+------+---------+------+------+--------------------------------+
+| id | select_type | table        | type | possible_keys | key  | key_len | ref  | rows | Extra                          |
++----+-------------+--------------+------+---------------+------+---------+------+------+--------------------------------+
+|  1 | SIMPLE      | actors       | ALL  | NULL          | NULL | NULL    | NULL |  200 |                                |
+|  1 | SIMPLE      | films        | ALL  | NULL          | NULL | NULL    | NULL | 1000 | Using where; Using join buffer |
+|  1 | SIMPLE      | actors_films | ALL  | NULL          | NULL | NULL    | NULL | 5462 | Using where; Using join buffer |
++----+-------------+--------------+------+---------------+------+---------+------+------+--------------------------------+
+
+  
+Si noti che per tutte e tre le tabelle coinvolte nelle due inner-join, il campo type dell'output di explain è impostato a ALL. 
+Questo significa che per ogni tabella coinvolta verranno utilizzate tutte le righe. Quindi MySQL andrà a fare una FULL-SCAN su
+una tabella con 200*1000*5462 righe, cioè 1 092 400 000 di righe!
+Andiamo allora ad ottimizzare la query, utilizzando dei bei indici. Allora:
+
+ALTER TABLE films ADD INDEX(film_id);
+ALTER TABLE actors_films ADD INDEX(film_id);
+
+Il risultato di EXPLAIN in questo caso sarà :
+
+
++----+-------------+--------------+------+---------------+---------+---------+----------------------+------+--------------------------------+
+| id | select_type | table        | type | possible_keys | key     | key_len | ref                  | rows | Extra                          |
++----+-------------+--------------+------+---------------+---------+---------+----------------------+------+--------------------------------+
+|  1 | SIMPLE      | actors       | ALL  | NULL          | NULL    | NULL    | NULL                 |  200 |                                |
+|  1 | SIMPLE      | films        | ALL  | film_id       | NULL    | NULL    | NULL                 | 1000 | Using where; Using join buffer |
+|  1 | SIMPLE      | actors_films | ref  | film_id       | film_id | 2       | sakila.films.film_id |    5 | Using where                    |
++----+-------------+--------------+------+---------------+---------+---------+----------------------+------+--------------------------------+
+
+
+Come si vede abbiamo ridotto lo scan a 1 000 000 di righe. La situazione è notevolmente migliorata poichè adesso MySQL è in grado di 
+utilizzare l'indice costruito sulla sua colonna film_id. Infatti adesso MySQL ha delle possibili chiavi (indici) da poter utilizzare
+come indicato dalla colonna possible_keys e ne utilizza in particolare una ( indicata dalla colonna key ) che è film_id, che punta 
+a sakila.films.film_id. 
+Adesso per ogni combinazione di righe delle tabelle precedenti,la tabella in questione mette in gioco 5 righe. 
+Procediamo adesso con l'ottimizzazione. Infatti so noti che nella query viene fatta un'altra inner join che è quella che coinvolge 
+la tabella di link e la tabella degli attori. Ebbene anche qui possiamo utilizzare degli indici. 
+
+ALTER TABLE actors ADD INDEX(actor_id);
+ALTER TABLE actors_films ADD INDEX(actor_id);
+
++----+-------------+--------------+------+------------------+----------+---------+------------------------------+------+-------------+
+| id | select_type | table        | type | possible_keys    | key      | key_len | ref                          | rows | Extra       |
++----+-------------+--------------+------+------------------+----------+---------+------------------------------+------+-------------+
+|  1 | SIMPLE      | films        | ALL  | film_id          | NULL     | NULL    | NULL                         | 1000 | Using where |
+|  1 | SIMPLE      | actors_films | ref  | film_id,actor_id | film_id  | 2       | sakila.films.film_id         |    5 |             |
+|  1 | SIMPLE      | actors       | ref  | actor_id         | actor_id | 2       | sakila.actors_films.actor_id |    1 |             |
++----+-------------+--------------+------+------------------+----------+---------+------------------------------+------+-------------+
+
+Adesso viene eseguito un fullscan su 5000 righe e basta. Si noti che è cambiato anche l'ordine della combinazione delle tabelle. 
+(colonna table), l’ordine delle tabelle è dunque variato e quanto mostrato da EXPLAIN è l’esatta sequenza con cui “query optimizer” 
+aprirà le tabelle e risolverà i join. L’ordine scritto nel FROM non ha alcuna rilevanza: la scelta della sequenza più opportuna 
+è operata in base a quella che è in grado di fornire il risultato migliore. In questo caso vi è la necessità di effettuare il full scan di 
+films, e viene eseguito come prima operazione per evitare di doverlo ripetere più volte se fosse posticipato nella esecuzione della query, 
+ragion per cui lista_film è la prima tabella considerata.
+
+La necessità di effettuare il full scan è data dalla presenza della condizione sul campo length (length > 180) che non è un campo indicizzato. 
+Proviamo allora a definire un indice anche per esso e vediamo che succede:
+
+  
+ALTER TABLE films ADD INDEX(length);
+
+
++----+-------------+--------------+-------+------------------+----------+---------+------------------------------+------+-------------+
+| id | select_type | table        | type  | possible_keys    | key      | key_len | ref                          | rows | Extra       |
++----+-------------+--------------+-------+------------------+----------+---------+------------------------------+------+-------------+
+|  1 | SIMPLE      | films        | range | film_id,length   | length   | 3       | NULL                         |   46 | Using where |
+|  1 | SIMPLE      | actors_films | ref   | film_id,actor_id | film_id  | 2       | sakila.films.film_id         |    5 |             |
+|  1 | SIMPLE      | actors       | ref   | actor_id         | actor_id | 2       | sakila.actors_films.actor_id |    1 |             |
++----+-------------+--------------+-------+------------------+----------+---------+------------------------------+------+-------------+
+
+Adesso la situazione è davvero migliorata. Si esegue lo scan solo di 230 righe. 
+
+
+---CALLBACKS----------------------------------------------------------------------------------------------------------------------------------------
+
+Quando un utente seleziona da un campo select ( mentre lascia un commento ) uno stato, desideriamo che lo stato del ticket cambi e diventi quello
+selezionato dall'utente. A tale scopo, possiamo utilizzare il meccanismo delle callbacks messo a disposizione da Rails. Sostanzialmente un metodo
+callback è un metodo che viene eseguito prima o dopo un certo evento. Per le classi del MODEL che ereditano da ActiveRecord::Base, ci sono 
+before e after callbacks per i seguenti eventi: (sostituisci * con before/after) 
+
+Validation (*_validation)
+Creating (*_create)
+Updating (*_update)
+Saving (*_save)
+Destruction (*_destroy)
+
+Per la classe del model Comment, desideriamo costruire una callback che si verifichi dopo che il record
+sia stato creato, e quindi utilizzeremo a tale scopo after_create() : 
+
+class Comment < ActiveRecord::Base
+  
+  after_create :set_ticket_state
+  belongs_to :user
+  belongs_to :ticket
+  belongs_to :state
+  validates :text, :presence=>true   
+  
+  private
+  
+  def set_ticket_state
+  
+    self.ticket.state = state 
+    self.ticket.save!
+  end
+  
   
    
+end
 
 
-    
+
+
+
+
+ 
+
+
+
+     
       

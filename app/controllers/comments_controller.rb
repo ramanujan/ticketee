@@ -158,11 +158,38 @@ class CommentsController < ApplicationController
   # Azione accesa dalla form integrata in show.html.erb relativa al controller ticket.  
   # Viene invocato per mezzo di ticket_comments(@ticket) con verbo POST 
   # Si ricordi che Comment presenta due associazione many=>to=>one. Una con User e l'altra con Ticket
+  # Nel codice HTML legato alla form avremo: 
+  # 
+  #  <div class="input_cell"> 
+  #     <textarea cols="40" id="comment_text" name="comment[text]" rows="20"></textarea> 
+  #  </div> 
+  #     
+  #   ... 
+  #  
+  #   <div class="input_cell"> 
+  #     <select id="comment_state_id" name="comment[state_id]"></select> 
+  #   </div>       
+  #
+  #   Come sappiamo il componente di routing di Rails quando vede arrivare comment[text]="some text"
+  #   crea un HashWithIndifferentAccess dentro params. Questo Hash è comment. 
+  #  
+  #     comment = {:text=>"some text"} quindi quando arriva la variabile comment[state_id]="1"
+  #   
+  #   allora aggiunge:   
+  #    
+  #     comment = {:text=>"some text", :state_id=>"1"}
+  #   
+  #   Questo Hash è accessibile via params:
+  #
+  #     params[:comment]
   
   def create
     
     @comment = @ticket.comments.build(params[:comment].merge(:user=>current_user) ) 
     
+    # RE-FACTORING
+    @comment.state = State.find( params[:comment][:state_id] ) 
+   
     if @comment.save 
                 flash[:notice]="Comment has been created."
                 redirect_to [@ticket.project, @ticket] 
@@ -170,6 +197,7 @@ class CommentsController < ApplicationController
                
                 flash[:error]="Comment has not been created."
                 @title="Adding comment errors - "
+                @states=State.all
                 render :template => "tickets/show" 
                 # Utilizziamo :template per presentare un template relativo ad un'azione di un'altro controller
                 # possiamo fornire sia un path assoluto che relativo. Quello relativo si riferisce a /app/views

@@ -85,5 +85,9 @@ Then /^show me the page$/ do
 
 end
 
+When /^(?:|I )select "([^"]*)" from "([^"]*)"$/ do |value, field|
+  select(value, :from => field)
+end
+
 
 

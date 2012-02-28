@@ -1,12 +1,15 @@
 <%=div_for(comment) do%>
    
    <p>
-   	  <%=comment.user%>
+   	  <b><%=comment.user%></b>
    </p>
+   
+   
    
    <p>
    	  <%=simple_format(comment.text)%> 
    </p>
    
-   <hr /> 
+   <hr class="space"/>
+   <hr class="gray_bottom_border"/> 
 <%end%>

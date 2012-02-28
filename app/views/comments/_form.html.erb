@@ -9,10 +9,22 @@
 	   <div class="input_cell">
 	     <%=f.text_area :text%>
        </div> 
-         
+       
+       <div class="label_cell">
+         <%=f.label :state_id%>
+	   </div>
+	  
+       <div class="input_cell">
+	     <%=f.select :state_id, 
+	                 @states.map{|state| [state.name,state.id]},
+	                 :selected=>@ticket.state_id%>
+       </div>       
+       
         <div>
           <%=f.submit :class=>"formButton"%>
         </div>
+
+
 
 <%end%>
  

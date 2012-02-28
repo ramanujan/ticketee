@@ -32,4 +32,4 @@ Scenario: Viewing tickets for a given project
  When I follow "Make it shiny!"
  Then I should see "Make it shiny!" within "#ticket_title_field h2"
  And I should see "Gradients! Starbursts! Oh my!" 
- And I should see "Created by user@ticketee.com"
+ And I should see "Created by: user@ticketee.com"

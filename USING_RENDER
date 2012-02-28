@@ -137,7 +137,47 @@ hai intenzione di eseguire la presentazione di una parte della resa totale. Ad e
 
 dentro il file new.html.erb relativo all'azione new() del controller projects (ProjectsController)
 andrà a eseguire il file _form.html.erb dentro app/views/projects/
+----------------------------------------------------------------------------------------------------
 
+Un'altro meccanismo davvero utile è quello mostrato di seguito: 
 
+<div id="comments">
+       
+           <%if @ticket.comments.exists? %>
+           
+             <%=render @ticket.comments.select(&:persisted?)%>
+           
+           <%else%>
+             
+             There are no comments for this ticket
+           
+           <%end%> 
+       
+</div>
+
+In questo caso vediamo che a render() viene passato un array. In particolare un array con i soli
+oggetti Comment che sono stati propagati nel database. Quando render lavora in questo modo, allora
+va a presentare il rendering di un partial, per ogni elemento dell'array. Il nome del partial è 
+dedotto dal nome della classe del primo elemento incontrato nell'array (oppure esegue il controllo
+del nome della classe per ogni elemento? ) Dove viene cercato il partial? Per rispondere a questa
+domanda, si noti che in questo caso il partial vive dentro /views/comments/ quindi render lo deduce 
+dal nome della classe del primo elemento pluralizzando. 
+
+----------------------------------------------------------------------------------------------------
+
+Un parziale può essere reso presentato anche dall'azione di un controller. Questo scenario è molto
+comune nei meccanismi AJAX. Ad esempio si prenda in considerazione:
+
+def new
+ 
+ @ticket=Ticket.new 
+ @ticket.assets.build  
+ number = params[:number].to_i
+ render :partial=>"static_files/file_fields",
+         :locals =>{:number=>number}
+
+end
+
+Questo è molto utile quando l'azione ajax sta richiedendo un frammento di html.  
 
 

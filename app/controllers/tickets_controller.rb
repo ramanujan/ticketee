@@ -133,6 +133,7 @@ class TicketsController < ApplicationController
     e tra @ticket e @user ? 
     
     (1) Si noti che @user è già persistente, se creassi un nuovo ticket e invocassi
+      
         ticket.user=@user allora questo metodo aggiornerebbe anche la foreign_key cioè 
         ticket.user_id = @user.id
       
@@ -156,12 +157,134 @@ class TicketsController < ApplicationController
         
      end    
 
-
+=begin
+  Nell'azione show(),viene preparato un array:
+  @states = State.all
+  Questo viene utilizzato nella view, e precisamente nel template show.html.erb dove 
+  c'è un render di comments/form.html.erb in questo modo: 
+  
+    <%=f.select :state_id, 
+                   @states.map{|state| [state.name,state.id]},
+                   :selected=>@ticket.state_id%>
+  
+  Qui stiamo utilizzando un nuovo metodo del form-builder che è select().
+  
+  Module: ActionView::Helpers::FormOptionsHelper 
+  method: select()
+  
+  
+  Per capire il frammento html prodotto da questo helper facciamo deglie esempi:
+  
+    select("post", "category", Post::CATEGORIES, {:include_blank => true})
+  
+ Produrrà:
+ 
+   <select name="post[category]">
+     <option></option> # <========= Dovuto a :include_blank=>true
+     <option>joke</option>
+     <option>poem</option>
+   </select> 
+   
+  Un'altro scenario ricorrente è ad esempio: 
+  
+    select("post",
+           "person_id", 
+            Person.all.collect {|p| [ p.name, p.id ] }, {:include_blank => 'None'})
+  
+  Che produrrà :
+  
+    <select name="post[person_id]">
+      <option value="">None</option> # <== Dovuto a :include_blank => 'None'
+      <option value="1">David</option>
+      <option value="2" selected="selected">Sam</option>
+      <option value="3">Tobias</option>
+    </select> 
+  
+  
+  Come si nota l'array creato nel blocco di collect() viene utilizzato per generare i campi
+  <option></option>
+  Si noti che una volta selezionato e spedita la form, a Rails arriverà post[:person_id]=1 
+  oppure post[:person_id]=2 ecc.. 
+  
+  Un'altro esempio simpatico, utilizza prompt: 
+  
+  select("post", 
+         "person_id", 
+         Person.all.collect {|p| [ p.name, p.id ] }, {:prompt => 'Select Person'})
+      
+  e produrrà:
+  
+  <select name="post[person_id]">
+    <option value="">Select Person</option>
+    <option value="1">David</option>
+    <option value="2">Sam</option>
+    <option value="3">Tobias</option>
+  </select> 
+  
+  Se vogliamo, possiamo indicare quale elemento option deve essere selezionato per default: 
+  
+  select("post", 
+         "person_id", 
+         Person.all.collect {|p| [ p.name, p.id ] }, {:selected=>2})
+  
+  
+  <select name="post[person_id]">
+    <option value="">Select Person</option>
+    <option value="1">David</option>
+    <option value="2" selected="selected">Sam</option>
+    <option value="3">Tobias</option>
+  </select>  
+  
+  
+  oppure disabilitare un'opzione:
+  
+   select("post", 
+         "person_id", 
+         Person.all.collect {|p| [ p.name, p.id ] }, {:disabled=>2})
+  
+  
+  <select name="post[person_id]">
+    <option value="">Select Person</option>
+    <option value="1">David</option>
+    <option value="2" disabled="disabled">Sam</option>
+    <option value="3">Tobias</option>
+  </select>  
+  
+  Nel nostro esempio : 
+  
+    <%=f.select :state_id, 
+                   @states.map{|state| [state.name,state.id]},
+                   :selected=>@ticket.state_id%>
+  
+  Questa f.select() qui, equivale a: 
+  
+    select :comment,
+           :state_id, 
+           @states.map{|state| [state.name,state.id]},
+           :selected=>@ticket.state_id
+            
+  
+  E supponendo che gli stati siano ad esempio 'New', 'Open', 'Closed' Allora: 
+  
+  
+  <select name="comment[state_id]">
+    <option value="1">New</option>
+    <option value="2" selected="selected">'Open'</option>
+    <option value="3">Closed</option>
+  </select>  
+  
+  
+  
+  
+=end
+     
+     
      def show
        
        @title = "Showing ticket: #{@ticket.title} - "
        @comment = @ticket.comments.build
-          
+       @states = State.all
+           
      end 
 
      

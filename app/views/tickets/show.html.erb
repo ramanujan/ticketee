@@ -51,10 +51,15 @@
              </div>
            
              <div>
-               Created by <b><%=@ticket.user.email%></b> 
+               Created by: <b><%=@ticket.user.email%></b> 
                about <%=distance_of_time_in_words_to_now @ticket.created_at,true%> ago
              </div>
-           
+             
+            
+             <%=render @ticket.state if @ticket.state%>
+               
+             <hr class="space"/>
+               
              <%unless @ticket.assets.empty?%>
                <%@ticket.assets.each do |asset| %>
                  <div>
@@ -69,33 +74,33 @@
     <hr class="space"/>
    
    <div id="comments" class="cool_box rounded column span-23 last">
-       
-           <%if @ticket.comments.exists? %>
-           
-             <%=render @ticket.comments.select(&:persisted?) %>
+      <%if @ticket.comments.exists? %>
+        <div>
+         
+           <h2 class="alt">Comments:</h2>
+            
+        </div>    
+        <hr class="space">     
+        <%=render @ticket.comments.select(&:persisted?) %>
              
-           <%else%>
-             There are no comments for this ticket
-           <%end%> 
+      <%else%>
+        <div>
+          <h2 class="alt">There are no comments for this ticket</h2>
+        </div>  
+      <%end%> 
        
-      </div>
+   </div>
      
-     
-     
-       <hr class="space">
+   <hr class="space">
        
-     
-       
-       <div class="cool_text_small">
+   <div class="cool_text_small">
        
          <%=render "comments/form"%>
         
-       </div>
+   </div>
        
        <hr class="space"/>
-       
-       <hr />
      
    
-   </div>       
+</div>       
 
