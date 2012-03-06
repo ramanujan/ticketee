@@ -23,6 +23,7 @@ class PagesController < ApplicationController
          1) form_for(), per creare delle form attorno ad una classe del MODEL
          2) form_tag(), per creare form generiche. Utile quando devi rappresentare la creazione di una risorsa complessa
          3) fields_for(), con nested attributes, utile per rappresentare la creazione di una risorsa complessa.
+         4) Fai un commento su form_for utilizzato con label. 
          
          Vedremo nei vari esempi cosa s'intende per risorsa complessa. 
 =end

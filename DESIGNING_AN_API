@@ -1,0 +1,306 @@
+--- Introduzione ---
+
+Vogliamo adesso, che un utente possa utilizzare la nostra applicazione attraverso una API, cioè 
+una APPLICATION PROGRAMMING INTERFACE. Si tratta di un'interfaccia di programmazione, un insieme di
+metodi, che sono utilizzati da programmi remoti o dispositivi mobile, per ottenere rappresentazioni di
+risorse, ovvero dati dall'applicazione sotto forma di XML oppure JSON (nel nostro caso). 
+
+Quando si sviluppa un API è buona norma documentare, con un gran numero di esempi su come utilizzare 
+l'interfaccia e su cosa ci si può fare. Questo è un buon modo per convincere la gente ad utilizzare
+le nostre API. 
+
+Le API devo avere una versione, devono cioè essere VERSIONED! Il punto fondamentale di questo concetto
+è che una volta che una API è taggata come STABILE non deve essere più toccata, deve cioè rimanere in
+uno stato FROZEN. 
+
+Le risorse come sappiamo nella terminolgia REST sono individuate da URLs. La nostra API ha una BASE-URL
+del tipo: /api/v1/projects.json <== Questa sarà un URL che ritorna una rappresentazione JSON di una lista
+di progetti. v1, 1, 1.0 indica una versione considerata stabile. 0.1 una versione instabile. 
+
+Per CONTROLLARE QUALE UTENTE STA UTILIZZANDO LA TUA API, utilizzeremo un sistema di autenticazione 
+TOKEN-BASED, che è un meccanismo che Devise può fornire. Richiederemo che il token venga passato
+ad ogni richiesta, poichè senza di lui non potremo essere sicuri di chi stia facendo cosa.
+
+Potremo grazie al token PORRE DELLE RESTRIZIONI SULLE RISORSE DEL SISTEMA. Potremo anche utilizzare il 
+token per tracciare il numero di richieste che l'utente ha eseguito sulle API ed eventualmente bloccare
+ulteriori richieste se, ad esempio, l'utente ha superato le 100 interazioni per ora. Questo è detto
+RATING DELLE API. 
+
+--- The projects API ---
+
+Poichè desideriamo che tutte le nostre API siano invocabili da un URL che ha una parte, una base prefissata, 
+e cioè /api/v1/ dobbiamo utilizzare NAMESPACE. In particolare come abbiamo visto questo ci permette di anteporre
+una parte fissa nell'URL. Nella nostra applicazione in routes.rb abbiamo:
+
+	 namespace :api do
+     
+       namespace :v1 do
+         resources projects
+       end
+     
+     end
+   
+Questo produrrà i seguenti routes: 
+
+ 
+api_v1_projects     GET    /api/v1/projects(.:format)                           {:action=>"index", :controller=>"api/v1/projects"}
+                    POST   /api/v1/projects(.:format)                           {:action=>"create", :controller=>"api/v1/projects"}
+new_api_v1_project  GET    /api/v1/projects/new(.:format)                       {:action=>"new", :controller=>"api/v1/projects"}
+edit_api_v1_project GET    /api/v1/projects/:id/edit(.:format)                  {:action=>"edit", :controller=>"api/v1/projects"}
+api_v1_project      GET    /api/v1/projects/:id(.:format)                       {:action=>"show", :controller=>"api/v1/projects"}
+                    PUT    /api/v1/projects/:id(.:format)                       {:action=>"update", :controller=>"api/v1/projects"}
+                    DELETE /api/v1/projects/:id(.:format)                       {:action=>"destroy", :controller=>"api/v1/projects"}
+ 
+
+Prima di scrivere il vero e proprio codice, andiamo a creare dei test con RSpec. In particolare 
+utilizzeremo il gem rack-test, che contiene Un modulo Rack::Test::Methods che a sua volta contiene
+dei metodi come get, post, put, delete. Questi metodi prendono come parametri un path sul quale piazzare
+le richieste, e quindi ritornano un Rack#response che è un Array che consiste di tre parti:
+HTTP Status Code, HTTP Headers (come Hash), body.
+
+  [200,{},"Hello world!"]
+
+Perchè utilizziamo questo modulo? Stiamo evitando di utilizzare i controller-tests standard di RSpec 
+di proposito,per essere sicuri che PRECISI URLS STIANO RISPONDENDO NELLA MANIERA CORRETTA invece 
+di testare solo che l'azioni del controllore esistano e stiano facendo quello che gli abbiamo detto di fare. 
+
+
+
+PASSO 1) Come prima cosa abbiamo creato spec/apis/v1/projects_spec.rb  che contiene:
+           
+           require "spec_helper"
+           
+           describe "api/v1/projects", :type=>:api do
+           
+           end
+         
+         Si noti in particolare l'utilizzo di :type=>:api che marca questo insieme di test come "api"
+         Si noti che viene eseguito spec_helper con require. In particolare ricordiamo che questo
+         comporta il caricamento dell'ambiente Rails e di test, e quindi di tutto quello che incontra
+         dentro support in particolare anche dentro le sue sottodirectories.Quindi viene eseguito anche
+         spec/suppodrt/api/helper.rb
+
+PASSO 2) Come seconda cosa abbiamo creato  spec/support/api/helper.rb che contiene: 
+         
+           module ApiHelper
+             include Rack::Test::Methods
+             
+             def app
+               Rails.application
+             end
+
+           end
+
+
+           RSpec.configure do |c|
+             
+             c.include ApiHelper, :type => :api
+
+           end
+           
+         
+         Questo fa si di includere questo modulo solo dentro i blocchi describe marcati
+         come api ( e cioè utilizzando l'opzione di describe :type=>:api)   
+         
+         A cosa serve il metodo app() ? viene utilizzato dai metodi in Rack::Test::Methods  
+         in modo da sapere su quale applicazione agire. 
+         
+
+
+L'idea è di utilizzare un TOKEN con le nostre API. In pratica ad ogni invocazione di un
+metodo attraverso la nostra API, dobbiamo poter passare anche un token, che deve essere 
+fornito insieme con la richiesta in qualche maniera. Questo token deve essere univoco e
+possiamo chiedere a Devise di generarlo per noi. Quando andrebbe creato il token? Il token
+andrebbe creato alla prima creazione del record. Devise ha molti modi per generare un token
+univoco. Devise permette di spedire il token via query-string oppure via HTTP Basic Authentication.
+
+
+PASSO 3) Scriviamo i nostri tests: 
+          
+          describe "api/v1/projects", :type=>:api 
+          
+          let(:user){ create_user! }    
+          let(:token){ user.authentication_token }   
+          
+          before(:each) do
+            @project = Factory(:project)  
+            user.permissions.create!(:action=>"view",:thing=>@project)
+          end 
+   
+          context "projects viewable by this user " do
+            
+            let(:url){ "/api/v1/projects" }    
+            
+            it "json" do
+              
+              projects_json = Project.for(user).all.to_json # Lista di progetti che sono visibile a questo utente, la lista viene codificata
+                                                            # in json  
+              get "#{url}.json"                             # <== Si noti che qui è presente già il concetto di negoziazione delle risorse 
+              last_response.body.should eql(projects_json) 
+              last_response.status.should eql(200)
+              
+              projects = JSON.parse(last_response.body)
+              
+              projects.any? do |project|
+              
+               project.
+              end.should eql(true)
+        
+  
+
+json gem fornisce un parser JSON. Un parser legge la rappresentazione e quindi ricrea la struttura. La struttura ricreata dal parser è un array 
+in quuesto caso, un array di Hash che rappresenta l'insieme dei progetti richiesto.
+
+
+
+         
+--- Serving an API ---
+  
+Dobbiamo creare un controller per le nostre API. Il controller avrà il compito di servire le richieste
+per le tue API. Il controller è separato dalla nostra applicazione ed è impacchettato dentro un 
+namespace che a sua volta è impacchettato dentro un'altro namespace. 
+  
+In controller risiede in app/controllers/api/v1/base_controller.rb, e all'interno di questo file 
+mettiamo: 
+  
+    class Api::V1::BaseController < ActionController::Base 
+        
+quindi creiamo un controller 'fratello di ApplicationController' poichè ereditiamo da 
+ActionController::Base direttamente. 
+
+  class Api::V1::BaseController < ApplicationController::Base
+  
+    respond_to :json
+    
+  end
+  
+Tutti i controllori che erediteranno da questo, saranno pronti a rispondere ad una richiesta 
+di rappresentazione json. SI NOTI CHE È UN MODO PARTICOLARE DI UTILIZZARE respond_to(). 
+ 
+   class Api::V1::ProjectsController < Api::V1::BaseController
+     
+     def index
+       respond_with(Project.all)
+     end
+   
+   end
+        
+
+Quindi nella superclasse abbiamo detto che ogni controller che eredita da ApplicationController::Base
+deve essere in grado di servire delle rappresentazioni json. QUindi in ProjectsController rispondiamo
+con respond_with() che invoca sull'oggetto ritornato da Project.all (che è un array) il metodo 
+to_json        
+        
+--- API Authentication --- 
+
+Quando utilizziamo le API desideriamo autenticare l'utente. Abbiamo detto che questo lo possiamo realizzare
+tramite un single-access token. Quello che abbiamo fatto è di cambiare BaseController e ProjectsController 
+nel namespace Api::V1 : 
+
+class Api::V1::BaseController < ActionController::Base
+  
+  respond_to    :json
+  before_filter :authenticate_user
+  
+  private 
+  
+  def authenticate_user 
+  
+    @current_user = User.find_by_authentication_token(params[:token])     
+  
+  end 
+  
+  def current_user 
+    @current_user
+  end
+  
+end
+
+
+
+class Api::V1::ProjectsController < Api::V1::BaseController
+  
+  def index
+  
+    respond_with( Project.for(current_user).all )
+  
+  end
+  
+end
+
+Modifichiamo anche il file di testing. In questo caso ci sono due progetti
+uno per il quale l'utente non ha permessi e l'altro si. 
+
+describe "api/v1/projects", :type=>:api do
+
+  let(:user){ create_user! }    
+  let(:token){ user.authentication_token }   
+  
+  before(:each) do
+    @project1 = Factory(:project)  
+    @project2 = Factory(:project, :name=>"Access Denied")
+    user.permissions.create!(:action=>"view",:thing=>@project1)
+    
+  end 
+   
+  context "projects viewable by this user " do
+    
+    let(:url){ "/api/v1/projects" }    
+     
+    it "json" do
+      get "#{url}.json" # <== Si noti get utilizza il token automaticamente ( :token=>token ) 
+      projects_json = Project.for(user).all.to_json
+      last_response.body.should eql(projects_json)
+      last_response.status.should eql(200)
+      projects = JSON.parse(last_response.body)
+     
+      projects.any? do |project|
+        project["name"] == "Ticketee"
+      end.should be_true 
+      
+      projects.any? do |project|
+        project["name"] == "Access Denied"
+      end.should be_false 
+    
+    end
+
+  end   
+
+end
+
+ 
+
+
+
+--- Error Reporting ---
+
+Quando si verifica un problema, bisogna notificarlo chiaramente al client. 
+Questo è assolutamente inevitabile e quindi si deve progettare un chiaro
+e pulito sistema di reporting degli errori. 
+
+Ad esempio è possibile che un utente utilizzi un token non valido, per  
+interfacciarsi con le API della tua applicazione. Quindi quando succede questo
+evento, lo possiamo notificare ad esempio in questo modo: 
+
+{ error: "Token is invalid." }
+
+
+Per creare la situazione d'errore andiamo ad eseguire una richiesta senza token:
+
+describe "API errors", :type => :api do
+ 
+ it "making a request with no token" do
+ 
+   get "/api/v1/projects.json", :token => ""
+   error = { :error => "Token is invalid." }
+   last_response.body.should eql(error.to_json)
+ 
+ end
+
+
+--- Serving XML ---
+
+
+Possiamo servire tutte le rappresentazione che desideriamo dalla nostra applicazione. 
+Ad esempio mentre serviamo le nostre risorse come JSON possiamo anche servirle come XML.
+        

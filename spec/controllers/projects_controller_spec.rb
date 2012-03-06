@@ -1,21 +1,21 @@
 =begin
-         'spec_helper.rb'   viene caricato da /spec. Ha il compito di caricare l'ambiente per i test. 
-          Ha già il codice necessario per includere l'ambiente Rails e anche gli helper associati a Rails. 
-          Inoltre carica tutto quello che in contra  in spec/support e nelle sue sottodirectory. 
+         'spec_helper.rb'   viene caricato da /spec. Ha il compito di CARICARE L'AMBIENTE PER IL TEST.
+          Ha già il codice necessario per includere l'ambiente Rails e anche gli helpers associati a Rails. 
+          Inoltre carica tutto quello che incontra  in spec/support e nelle sue sottodirectory. 
           
           describe : ci serve a descrivere un componente, in questo caso la classe ProjectsController.
                      Racchiude un insieme di tests, detti esempi che ci servono a testare un comportamento
-                     del modulo.       
+                     del modulo ( in questo caso della classe ProjectsController ).       
           
-          get  : Dice a RSpec di eseguire l'azione show(), ovvero di eseguire una HTTP GET request 
-                 all'azione show del controller ProjectsController      
-                 L'oggetto response modella la risposta a questa get, e testiamo che sia una redirect 
-                 verso /projects. Analogamente post(), put(), delete() sono i corrispettivi metodi 
-                 http.  
+          get      : Dice a RSpec di eseguire l'azione show() del controller da dove viene invocato, ovvero 
+                     di eseguire una HTTP GET request all'azione show() del controller ProjectsController      
+                     L'oggetto response modella la risposta a questa get, e testiamo che sia una redirect 
+                     verso /projects. Analogamente post(), put(), delete() sono i corrispettivi metodi 
+                     http.  
                  
-          _______________________
+          _________________________________________________________________________________________________
           
-          Restricting Action to admins only 
+          --- Restricting Action to admins only --- 
           
           
           Per quanto riguarda la risorsa Project, desideriamo che tutte le azioni :new,:create,:edit,
@@ -44,7 +44,7 @@
          Qui sotto utilizziamo anche un blocco context. Viene utilizzato per specificare il contesto
          cioè la precondizione di un esempio, un ambiente preesistente. 
          
-         _______________________
+         ______________________________________________________________________________________________
          
          sign_in()
          

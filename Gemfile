@@ -51,7 +51,7 @@ group :test do
   gem 'database_cleaner'
   gem 'email_spec' # mi serve a testare il modulo confirmable di devise.   
   gem 'launchy', '~>0.3.7'
-  
+ 
 end
 
 gem 'devise', '~> 1.4.3'

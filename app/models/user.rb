@@ -25,7 +25,8 @@
      Devise fornisce anche altri moduli opzionali:
      
      :token_authenticable => Lascia che gli utenti si autentichino via token. Può essere
-                             utilizzato insieme con :database_authenticable
+                             utilizzato insieme con :database_authenticable. Utile quando
+                             progetti API per la tua applicazione web.
      
      :encryptable =>  Aggiunge supporto ad altri metodi per cripatre la password.
                       Per default utilizza bcrypt.
@@ -91,8 +92,14 @@ class User < ActiveRecord::Base
    
   # Include default devise modules. Others available are:
   # :token_authenticatable, :encryptable, :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable,:confirmable
+  devise :database_authenticatable, 
+         :registerable,
+         :recoverable, 
+         :rememberable, 
+         :trackable, 
+         :validatable,
+         :confirmable,
+         :token_authenticatable
 
   # Setup accessible (or protected) attributes for your model
   attr_accessible :email, :password, :password_confirmation, :remember_me

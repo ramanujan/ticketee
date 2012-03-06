@@ -29,7 +29,7 @@
        
        Utilizzeremo invece RSpec per eseguire test BDD su componenti specifici, come ad esempio
        una certa classe. 
-       _________________________
+       ___________________________________________________________________________________________
        
         
         

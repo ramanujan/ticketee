@@ -97,8 +97,15 @@ Ticketee::Application.routes.draw do
        :as => :update_user_permissions
     
     
-    resources :static_files
+   resources :static_files
     
+   namespace :api do
+     namespace :v1 do
+       resources :projects
+     end
+   end
+   
+   
     
 
 =begin
